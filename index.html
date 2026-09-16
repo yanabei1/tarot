@@ -1,0 +1,2108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>无妄塔罗 · 抽牌占卜</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔮</text></svg>">
+<style>
+/* =========================================================
+   极简风格样式
+   ========================================================= */
+:root{
+  --bg:#0d0a15;
+  --panel:linear-gradient(172deg,#161128 0%,#110d1e 100%);
+  --panel2:rgba(255,255,255,.035);
+  --line:rgba(228,217,248,.09);
+  --line2:rgba(228,217,248,.17);
+  --ink:#ece7f7;
+  --ink2:#b9b0d4;
+  --ink3:#8d84a9;
+  --ink4:#6d6489;
+  --gold:#cfa964;
+  --gold2:#f0e7d4;
+  --gold-dim:rgba(207,169,100,.34);
+  --gold-soft:rgba(207,169,100,.12);
+  --red:#e08a97;
+  --teal:#8fcfae;
+  --serif:Georgia,'Times New Roman','Songti SC','Noto Serif SC','SimSun',serif;
+  --sans:'Segoe UI','PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;
+  --card-w:clamp(112px,16vw,158px);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background-color:var(--bg);
+  background-image:radial-gradient(1100px 640px at 50% -180px,rgba(86,60,150,.24),transparent 62%);
+  background-attachment:fixed;
+  color:var(--ink);font-family:var(--sans);line-height:1.65;
+}
+button{font-family:inherit}
+.page{max-width:880px;margin:0 auto;padding:30px 20px 90px}
+.app{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:30px 32px 36px;
+  box-shadow:0 30px 70px rgba(0,0,0,.4);
+}
+
+/* ---------- 头部 ---------- */
+.header{
+  display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;
+  padding-bottom:18px;border-bottom:1px solid var(--line);
+}
+.title{display:flex;align-items:center;gap:12px}
+.logo{font-family:var(--serif);font-size:22px;color:var(--gold);line-height:1}
+.title-main{font-family:var(--serif);font-size:25px;font-weight:700;letter-spacing:.16em;color:var(--gold2)}
+.title-sub{font-size:10px;color:var(--ink4);letter-spacing:.3em;text-transform:uppercase;font-weight:600;margin-top:3px}
+.tabs{display:flex;gap:24px}
+.tab{
+  position:relative;padding:8px 2px;background:none;border:none;
+  color:var(--ink3);font-size:13px;font-weight:600;letter-spacing:.14em;cursor:pointer;transition:color .18s;
+}
+.tab::after{content:'';position:absolute;left:0;right:0;bottom:0;height:1.5px;background:transparent;transition:background .2s}
+.tab:hover{color:var(--ink2)}
+.tab.active{color:var(--gold)}
+.tab.active::after{background:var(--gold)}
+.tab .badge{
+  display:inline-block;margin-left:7px;padding:0 7px;border-radius:999px;
+  background:var(--gold-soft);border:1px solid var(--gold-dim);
+  color:var(--gold);font-size:10.5px;line-height:17px;vertical-align:1px;font-weight:700;
+}
+
+/* ---------- 通用 ---------- */
+h3{
+  margin:32px 0 12px;font-size:11px;font-weight:700;color:var(--ink4);
+  letter-spacing:.28em;text-transform:uppercase;text-align:left;
+}
+h3.first{margin-top:10px}
+textarea,input[type=text]{
+  width:100%;background:transparent;border:1px solid var(--line2);border-radius:10px;
+  color:var(--ink);padding:11px 14px;font-size:14px;font-family:inherit;transition:border-color .2s;
+}
+textarea{min-height:62px;resize:vertical}
+textarea:focus,input[type=text]:focus{outline:none;border-color:var(--gold-dim)}
+.hint{font-size:12px;color:var(--ink4);margin-top:10px;letter-spacing:.02em}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  margin:10px 10px 0 0;padding:9px 22px;border-radius:999px;
+  border:1px solid var(--line2);background:transparent;color:var(--ink2);
+  cursor:pointer;font-size:13px;font-weight:600;letter-spacing:.08em;transition:all .18s;
+}
+.btn:hover{color:var(--ink);border-color:var(--gold-dim)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-main,.btn-draw{
+  background:linear-gradient(160deg,#ead9ae,#cfa964);border-color:transparent;color:#241a08;
+  font-weight:700;box-shadow:0 8px 22px rgba(207,169,100,.16);
+}
+.btn-main:hover,.btn-draw:hover{filter:brightness(1.07)}
+.btn-save{border-color:var(--gold-dim);color:var(--gold)}
+.btn-save:hover{background:var(--gold-soft)}
+.btn-ghost{font-size:12px;padding:6px 15px;color:var(--ink4);border-color:var(--line)}
+.btn-ghost:hover{color:var(--ink2)}
+.btn-danger{color:var(--red);border-color:rgba(224,138,151,.22)}
+.btn-danger:hover{background:rgba(224,138,151,.1)}
+.status{font-size:12.5px;color:var(--teal);font-weight:600;margin-left:6px}
+.actions{margin-top:10px}
+
+/* ---------- 牌阵选择 ---------- */
+.spreads{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.spread-button{
+  flex:1;min-width:150px;text-align:left;padding:14px 16px;border-radius:12px;
+  border:1px solid var(--line);background:transparent;color:var(--ink2);
+  cursor:pointer;transition:all .18s;
+}
+.spread-button:hover{border-color:var(--line2)}
+.spread-button.active{border-color:var(--gold-dim);background:var(--gold-soft)}
+.spread-name{font-size:13.5px;font-weight:700;color:var(--ink);letter-spacing:.06em}
+.spread-desc{font-size:11.5px;color:var(--ink4);margin-top:3px;letter-spacing:.03em}
+
+/* ---------- 抽取方式 ---------- */
+.methods{display:flex;gap:8px;margin-top:16px}
+.method{
+  padding:7px 17px;border-radius:999px;border:1px solid var(--line);background:transparent;
+  color:var(--ink3);cursor:pointer;font-size:12.5px;font-weight:600;letter-spacing:.06em;transition:all .18s;
+}
+.method.active{color:var(--gold);border-color:var(--gold-dim);background:var(--gold-soft)}
+
+/* ---------- 牌堆选牌 ---------- */
+.deckbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:16px 0 2px}
+.deckbar .btn{margin:0}
+.deck-progress{font-size:12px;color:var(--ink4);letter-spacing:.03em;line-height:1.4}
+/* 未选满时的选牌提示（醒目，直接告诉用户还差几张、当前在选哪个位置） */
+.deck-context{
+  margin-top:14px;padding:10px 14px;border-radius:10px;font-size:12.5px;line-height:1.65;
+  border:1px solid var(--gold-dim);background:var(--gold-soft);color:var(--gold);letter-spacing:.02em;
+}
+.deck-context.done{border-color:rgba(143,207,174,.32);background:rgba(143,207,174,.08);color:var(--teal)}
+.deck-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px;margin-top:16px}
+.deck-card{
+  aspect-ratio:250/432;border-radius:8px;position:relative;cursor:pointer;
+  user-select:none;touch-action:manipulation;
+  background:linear-gradient(168deg,#251c40 0%,#150f26 72%);
+  border:1px solid var(--line2);overflow:hidden;
+  box-shadow:0 6px 14px rgba(0,0,0,.32);transition:transform .15s,border-color .15s,box-shadow .15s;
+}
+.deck-card:active{transform:scale(.97)}
+.deck-card .deco{position:absolute;inset:5px;border:1px solid var(--gold-dim);border-radius:6px;pointer-events:none}
+.deck-card .star{position:absolute;left:0;right:0;top:30%;text-align:center;font-size:21px;color:var(--gold);opacity:.8}
+.deck-card .bk-num{
+  position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;
+  font-family:var(--serif);font-size:26px;font-weight:700;color:var(--gold2);line-height:1.1;
+  text-shadow:0 2px 8px rgba(0,0,0,.6);
+}
+.deck-card.selected{
+  border-color:var(--gold);
+  box-shadow:0 0 0 2px rgba(207,169,100,.3),0 8px 16px rgba(0,0,0,.35);
+  transform:translateY(-2px);
+}
+.deck-card.used{opacity:.24;cursor:default;filter:grayscale(.5)}
+.deck-card.used:active{transform:none}
+.deck-card .pickno{
+  position:absolute;top:6px;right:6px;min-width:21px;height:21px;border-radius:50%;
+  background:var(--gold);color:#241a08;font-size:11.5px;font-weight:800;
+  display:none;align-items:center;justify-content:center;z-index:2;
+}
+.deck-card.selected .pickno{display:flex}
+.tray{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;min-height:0}
+.tray .tray-card{
+  width:50px;height:86px;border-radius:6px;border:1px solid var(--line2);background:var(--panel2);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-size:19px;font-weight:700;color:var(--gold);
+}
+.tray-empty{font-size:12px;color:var(--ink4);padding:24px 0}
+
+/* ---------- 牌阵 ---------- */
+.draw-row{margin-top:20px}
+.result-bar{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-top:26px}
+.result-title{
+  font-size:11px;font-weight:700;color:var(--gold);
+  letter-spacing:.24em;text-transform:uppercase;
+}
+.result-actions{display:flex;gap:4px;flex:none}
+.result-btn{
+  padding:4px 10px;background:none;border:none;color:var(--ink4);
+  font-size:11.5px;font-family:inherit;cursor:pointer;letter-spacing:.08em;transition:color .18s;
+}
+.result-btn:hover{color:var(--gold)}
+#view-draw #note{margin-top:22px}
+.cards{display:flex;flex-wrap:wrap;gap:24px;justify-content:center;margin:22px 0 8px}
+.card-wrap{
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  max-width:calc(var(--card-w) + 20px);
+  animation:fadeUp .38s ease both;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.card-wrap.big{--card-w:clamp(158px,30vw,216px)}
+.position{
+  font-size:10.5px;font-weight:700;color:var(--gold);letter-spacing:.26em;
+  text-align:center;text-transform:uppercase;
+}
+.position small{display:block;font-size:10px;color:var(--ink4);letter-spacing:.1em;font-weight:400;margin-top:3px;text-transform:none}
+.position.a{color:#a9b6e6}
+.position.b{color:#e6a9b8}
+.position.c{color:#a9d8b6}
+.cardbox{width:var(--card-w);aspect-ratio:250/432;border-radius:12px;perspective:1100px;cursor:pointer;position:relative}
+.card-face{
+  width:100%;height:100%;border-radius:12px;position:absolute;inset:0;
+  backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;
+  transition:transform .55s cubic-bezier(.4,.1,.2,1);
+}
+.card-face.back{
+  transform:rotateY(0);
+  background:linear-gradient(165deg,#281e46 0%,#150f26 78%);
+  border:1px solid var(--gold-dim);
+  box-shadow:0 10px 24px rgba(0,0,0,.4);
+}
+.card-face.back .bk-in{
+  position:absolute;inset:6px;border:1px solid var(--gold-dim);border-radius:8px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;
+}
+.card-face.back .star{font-size:24px;line-height:1;color:var(--gold);opacity:.85}
+.card-face.back .bk-sym{font-size:8px;color:var(--ink4);letter-spacing:.3em}
+.card-face.back .bk-num{font-family:var(--serif);font-size:22px;color:var(--gold2);text-shadow:0 2px 6px rgba(0,0,0,.5)}
+.cardbox.flipped .card-face.back{transform:rotateY(180deg)}
+.cardbox.flipped .card-face.front{transform:rotateY(0)}
+.card-face.front{
+  transform:rotateY(-180deg);background:#f2ead6;
+  border:1px solid rgba(240,231,212,.9);box-shadow:0 10px 24px rgba(0,0,0,.45);
+}
+.card-face.front img{width:100%;height:100%;object-fit:cover;display:block}
+.card-face.front.reversed img{transform:rotate(180deg)}
+.num-tag{
+  position:absolute;top:7px;right:7px;z-index:2;
+  background:rgba(13,9,20,.72);color:var(--gold2);
+  border:1px solid rgba(207,169,100,.42);border-radius:7px;padding:2px 8px;
+  font-size:10.5px;font-weight:700;font-family:var(--serif);letter-spacing:.06em;
+}
+.orient-tag{
+  position:absolute;bottom:7px;left:50%;transform:translateX(-50%);z-index:2;
+  padding:2px 12px;border-radius:999px;font-size:10px;font-weight:700;letter-spacing:.3em;
+  white-space:nowrap;text-indent:.3em;
+}
+.orient-tag.up{background:rgba(31,102,88,.88);color:#dcf6e9}
+.orient-tag.down{background:rgba(148,55,74,.88);color:#f7dde3}
+.card-title{
+  width:var(--card-w);text-align:center;
+  font-family:var(--serif);font-size:13.5px;font-weight:600;color:var(--ink);
+  letter-spacing:.05em;line-height:1.35;
+  min-height:72px;                       /* 预留空间：文字出现不再推挤下方 */
+  opacity:0;transform:translateY(6px);
+  transition:opacity .3s ease,transform .3s ease;
+  pointer-events:none;
+}
+.card-title.show{opacity:1;transform:none;pointer-events:auto}
+.card-title .en{
+  display:block;margin-top:3px;font-size:10px;color:var(--ink4);font-weight:400;
+  letter-spacing:.18em;text-transform:uppercase;
+}
+.card-title .short{margin-top:4px;font-size:11px;color:var(--ink3);font-weight:400;font-family:var(--sans);letter-spacing:0}
+
+/* ---------- 二选一 / 三选一（网格行布局） ---------- */
+.choice-grid{
+  width:100%;
+  display:flex;flex-direction:column;gap:30px;margin-top:8px;
+}
+.choice-opts-line{
+  text-align:center;font-size:12px;color:var(--ink2);letter-spacing:.1em;margin-bottom:2px;
+}
+.choice-row{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;width:100%}
+.choice-row .card-wrap{max-width:calc(var(--card-w) + 20px)}
+
+/* 我以为 · 实际上 双组布局 */
+.think-layout{display:flex;flex-direction:column;gap:28px;margin-top:6px}
+.think-group{display:flex;flex-direction:column;align-items:center;gap:12px}
+.think-head{font-size:13px;font-weight:700;color:var(--gold);letter-spacing:.34em;text-indent:0;text-align:center;text-transform:uppercase}
+.think-head small{display:block;font-size:10.5px;color:var(--ink4);letter-spacing:.12em;text-indent:0;margin-top:4px;text-transform:none;font-weight:400;text-align:center}
+.think-group.actual .think-head{color:#e6a9b8}
+.think-group .cards{margin-top:0}
+
+/* ---------- 记录 ---------- */
+.record-tools{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 2px}
+.store-status{
+  font-size:12px;color:var(--ink4);margin-top:12px;padding:9px 14px;border-radius:10px;
+  background:var(--panel2);border:1px solid var(--line);letter-spacing:.02em;
+}
+.store-status.warn{color:#e5b877;border-color:rgba(229,184,119,.24);background:rgba(229,184,119,.06)}
+.store-status.err{color:#f0a3ad;border-color:rgba(240,163,173,.26);background:rgba(240,163,173,.07)}
+.journal{display:flex;flex-direction:column;margin-top:10px}
+.entry{border-bottom:1px solid var(--line)}
+.entry:last-child{border-bottom:none}
+.entry-head{display:flex;justify-content:space-between;align-items:center;padding:16px 6px;cursor:pointer;gap:12px}
+.entry-head:hover{background:rgba(255,255,255,.015)}
+.entry-q{font-size:14.5px;font-weight:600;color:var(--ink);letter-spacing:.02em}
+.entry-meta{font-size:11px;color:var(--ink4);margin-top:3px;letter-spacing:.03em}
+.entry-del{
+  padding:5px 12px;border-radius:8px;border:1px solid transparent;background:none;
+  color:var(--ink4);cursor:pointer;font-size:12px;font-family:inherit;transition:all .18s;
+  /* nowrap + flex:none：手机上「删除」二字不会竖排断行 */
+  white-space:nowrap;flex:none;
+}
+.entry-del:hover{color:var(--red);border-color:rgba(224,138,151,.2)}
+.entry-del.arming{color:#fff;background:var(--red);border-color:transparent;font-weight:700}
+.entry-copy{
+  padding:5px 12px;border-radius:8px;border:1px solid transparent;background:none;
+  color:var(--ink4);cursor:pointer;font-size:12px;font-family:inherit;transition:all .18s;
+  /* nowrap + flex:none：手机上「复制」二字不会竖排断行 */
+  white-space:nowrap;flex:none;
+}
+.entry-copy:hover{color:var(--gold);border-color:var(--gold-dim)}
+.entry-actions{display:flex;align-items:center;gap:4px;flex:none;flex-wrap:nowrap}
+.entry-body{padding:6px 6px 20px;border-top:1px solid var(--line)}
+.entry-thumbs{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}
+.entry-thumbs img{width:52px;aspect-ratio:250/432;border-radius:6px;border:none;box-shadow:0 4px 10px rgba(0,0,0,.35)}
+.entry-thumbs img.rev,.entry-card img.rev{transform:rotate(180deg)}
+.entry-cards{display:flex;flex-direction:column;margin-top:6px}
+.entry-card{display:flex;gap:13px;padding:13px 0;border-bottom:1px solid var(--line)}
+.entry-card:last-child{border-bottom:none}
+.entry-card img{width:62px;aspect-ratio:250/432;border-radius:6px;flex:none;box-shadow:0 4px 10px rgba(0,0,0,.35)}
+.entry-pos{font-size:10px;font-weight:700;color:var(--gold);letter-spacing:.24em;text-transform:uppercase}
+.entry-cname{font-family:var(--serif);font-size:13.5px;font-weight:600;color:var(--ink);margin-top:3px;letter-spacing:.04em}
+.entry-cname .o{
+  font-size:10.5px;font-weight:700;margin-left:8px;padding:1px 9px;border-radius:999px;
+  background:var(--gold-soft);color:var(--gold);font-family:var(--sans);letter-spacing:.1em;vertical-align:1px;
+}
+.entry-cname .o.down{background:rgba(224,138,151,.13);color:var(--red)}
+.entry-mean{font-size:12px;color:var(--ink3);margin-top:5px;line-height:1.6}
+.entry-note{
+  margin-top:12px;font-size:12.5px;color:var(--ink2);line-height:1.7;
+  background:none;border:0;border-left:2px solid var(--gold-dim);border-radius:0;padding:4px 14px;
+}
+.entry-note-edit{
+  margin-left:10px;padding:2px 12px;border-radius:7px;border:1px solid var(--line2);
+  background:transparent;color:var(--ink4);font-size:11px;font-family:inherit;cursor:pointer;
+  letter-spacing:.05em;transition:all .18s;vertical-align:1px;
+}
+.entry-note-edit:hover{color:var(--gold);border-color:var(--gold-dim)}
+.entry-note.editor{border-left:none;padding:0}
+.entry-note.editor textarea{min-height:88px}
+.note-empty{color:var(--ink4);font-size:12px}
+.entry-note-actions{display:flex;gap:8px;margin-top:10px}
+/* 记录内的「问题」编辑区（与笔记编辑同一套按钮样式） */
+.entry-q-block{
+  margin-top:12px;font-size:12.5px;color:var(--ink2);line-height:1.7;
+  background:none;border:0;border-left:2px solid var(--gold-dim);border-radius:0;padding:4px 14px;
+}
+.entry-q-edit{
+  margin-left:10px;padding:2px 12px;border-radius:7px;border:1px solid var(--line2);
+  background:transparent;color:var(--ink4);font-size:11px;font-family:inherit;cursor:pointer;
+  letter-spacing:.05em;transition:all .18s;vertical-align:1px;
+}
+.entry-q-edit:hover{color:var(--gold);border-color:var(--gold-dim)}
+.entry-q-block.editor{border-left:none;padding:0}
+.entry-q-block textarea{min-height:72px}
+.entry-q-hint{display:block;margin-top:6px;font-size:10.5px;color:var(--ink4);letter-spacing:.02em}
+.btn-edit-mini{
+  padding:7px 18px;border-radius:999px;border:1px solid var(--line2);background:transparent;
+  color:var(--ink2);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;
+  letter-spacing:.06em;transition:all .18s;
+}
+.btn-edit-mini:hover{color:var(--ink);border-color:var(--gold-dim)}
+.btn-edit-mini.primary{background:linear-gradient(160deg,#ead9ae,#cfa964);color:#241a08;border-color:transparent;font-weight:700}
+.btn-edit-mini.primary:hover{filter:brightness(1.07)}
+.empty{padding:52px 10px;text-align:center;color:var(--ink3);font-size:13.5px;letter-spacing:.05em}
+.empty .e-ico{font-size:30px;display:block;margin-bottom:12px;opacity:.55}
+
+/* ---------- 牌库 ---------- */
+.lib-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.chip{
+  padding:6px 15px;border-radius:999px;border:1px solid var(--line);background:transparent;
+  color:var(--ink3);cursor:pointer;font-size:12px;font-weight:600;letter-spacing:.06em;transition:all .18s;
+}
+.chip.active{color:var(--gold);border-color:var(--gold-dim);background:var(--gold-soft)}
+.lib-search{flex:1;min-width:150px}
+.lib-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:18px;margin-top:20px}
+.lib-card{cursor:pointer;text-align:center}
+.lib-card img{
+  width:100%;aspect-ratio:250/432;object-fit:cover;border-radius:10px;border:none;
+  box-shadow:0 10px 20px rgba(0,0,0,.38);transition:transform .18s,box-shadow .18s;
+}
+.lib-card:hover img{transform:translateY(-3px);box-shadow:0 16px 30px rgba(0,0,0,.45)}
+.lib-name{font-family:var(--serif);font-size:12.5px;font-weight:600;color:var(--ink2);margin-top:8px;letter-spacing:.05em}
+.lib-sub{font-size:10px;color:var(--ink4);margin-top:2px;letter-spacing:.1em}
+
+/* ---------- 弹窗 ---------- */
+.modal-mask{
+  position:fixed;inset:0;background:rgba(6,4,10,.82);backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);z-index:50;display:none;align-items:center;justify-content:center;padding:16px;
+}
+.modal-mask.show{display:flex}
+.modal{
+  background:linear-gradient(170deg,#171128,#110c1d);
+  border:1px solid var(--line2);border-radius:18px;max-width:620px;width:100%;
+  max-height:88vh;overflow:auto;padding:22px 26px 26px;position:relative;
+  box-shadow:0 40px 90px rgba(0,0,0,.6);
+}
+.modal-close{
+  position:sticky;top:0;float:right;width:32px;height:32px;border-radius:50%;
+  border:1px solid var(--line2);background:transparent;color:var(--ink4);font-size:14px;cursor:pointer;z-index:2;transition:all .18s;
+}
+.modal-close:hover{color:var(--ink);border-color:var(--gold-dim)}
+.modal-body{display:flex;gap:22px;flex-wrap:wrap;margin-top:6px}
+.modal-img{flex:0 0 auto}
+.modal-img img{width:192px;aspect-ratio:250/432;object-fit:cover;border-radius:10px;border:none;box-shadow:0 14px 30px rgba(0,0,0,.5)}
+.modal-img img.rev{transform:rotate(180deg)}
+.modal-info{flex:1;min-width:220px}
+.m-name{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--gold2);letter-spacing:.08em}
+.m-en{font-size:11px;color:var(--ink4);letter-spacing:.22em;text-transform:uppercase;margin-top:4px}
+.m-num{
+  display:inline-block;margin-top:10px;padding:3px 13px;border-radius:999px;
+  background:var(--gold-soft);border:1px solid var(--gold-dim);
+  color:var(--gold);font-size:11px;font-weight:700;letter-spacing:.08em;
+}
+.m-sec{margin-top:16px}
+.m-sec-title{font-size:10.5px;font-weight:700;letter-spacing:.24em;text-transform:uppercase}
+.m-sec-title.up{color:var(--teal)}
+.m-sec-title.down{color:#eba4ae}
+.m-sec p{margin:5px 0 0;font-size:13px;color:var(--ink2);line-height:1.8}
+
+/* ---------- 提示 ---------- */
+/* 手机端确认出牌悬浮按钮 */
+.confirm-fab{
+  position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:65;
+  padding:12px 34px;border-radius:999px;border:none;cursor:pointer;
+  background:linear-gradient(160deg,#ead9ae,#cfa964);color:#241a08;
+  font-size:14px;font-weight:700;letter-spacing:.1em;font-family:inherit;
+  box-shadow:0 12px 30px rgba(0,0,0,.5),0 0 0 1px rgba(207,169,100,.35);
+  animation:fadeUp .25s ease both;
+}
+.confirm-fab:active{transform:translateX(-50%) scale(.97)}
+
+/* 回到顶部悬浮按钮：右下角，向下滚动一段距离后出现 */
+.back-top{
+  position:fixed;right:18px;bottom:22px;z-index:64;
+  width:46px;height:46px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--gold-dim);cursor:pointer;
+  background:rgba(22,17,40,.9);color:var(--gold);
+  box-shadow:0 8px 22px rgba(0,0,0,.45);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  transition:border-color .18s,color .18s,transform .18s;
+}
+.back-top:hover{border-color:var(--gold);color:var(--gold2);transform:translateY(-2px)}
+.back-top:active{transform:scale(.94)}
+/* 手机端「确认出牌」是底部居中长条，这里上移让位，避免遮挡 */
+@media (max-width:640px){
+  .back-top{right:12px;bottom:88px}
+}
+
+/* 复制后前往 DeepSeek 弹窗 */
+.ds-modal{max-width:400px;text-align:center}
+.ds-body{padding:8px 4px 2px}
+.ds-icon{font-size:32px;line-height:1;margin-bottom:6px}
+.ds-title{font-size:16px;font-weight:700;color:var(--gold2);letter-spacing:.08em}
+.ds-text{margin-top:10px;font-size:13px;color:var(--ink2);line-height:1.8}
+.ds-text b{color:var(--gold)}
+.ds-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+
+.toast{
+  position:fixed;left:50%;bottom:36px;transform:translateX(-50%) translateY(90px);
+  background:rgba(20,14,34,.96);border:1px solid var(--gold-dim);color:var(--gold2);
+  padding:10px 24px;border-radius:999px;font-size:12.5px;font-weight:600;letter-spacing:.05em;
+  z-index:99;opacity:0;transition:.3s;pointer-events:none;max-width:88vw;text-align:center;
+  box-shadow:0 12px 30px rgba(0,0,0,.5);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+footer{
+  text-align:center;color:var(--ink4);font-size:11.5px;margin-top:26px;
+  letter-spacing:.08em;line-height:1.9;
+}
+
+/* ---------- 占卜须知 ---------- */
+.disclaimer{
+  margin-top:30px;padding:16px 18px;border:1px solid var(--line);border-radius:12px;
+  background:rgba(255,255,255,.02);
+  font-size:11.5px;color:var(--ink4);line-height:1.95;letter-spacing:.02em;
+}
+.dis-title{font-size:11px;font-weight:700;letter-spacing:.24em;color:var(--ink3);text-transform:uppercase;margin-bottom:8px}
+.disclaimer p{margin:5px 0;text-indent:0}
+
+@media (max-width:640px){
+  .page{padding:14px 10px 50px}
+  .app{padding:20px 18px 26px;border-radius:16px}
+  .header{flex-direction:column;align-items:flex-start;gap:10px}
+  .tabs{gap:18px}
+  /* 记录头部改为竖排：把「复制 / 删除」按钮挤成竖排文字的问题彻底解决 */
+  .entry-head{flex-direction:column;align-items:stretch;gap:10px}
+  .entry-head>div:first-child{width:100%}
+  .entry-actions{flex-wrap:wrap;gap:8px;justify-content:flex-end}
+  .entry-copy,.entry-del,.entry-q-edit,.entry-note-edit{padding:6px 14px;flex:none;white-space:nowrap}
+  .choice-row{gap:14px}
+  .deck-grid{grid-template-columns:repeat(auto-fill,minmax(74px,1fr));gap:8px}
+  .modal-img img{width:150px}
+}
+
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="app">
+    <div class="header">
+      <div class="title">
+        <div class="logo">✦</div>
+        <div>
+          <div class="title-main">无妄塔罗</div>
+          <div class="title-sub">Rider-Waite · 78 张</div>
+                  </div>
+      </div>
+      <div class="tabs">
+        <button class="tab active" data-tab="draw">占卜</button>
+        <button class="tab" data-tab="records">记录<span class="badge" id="rec-count" hidden>0</span></button>
+        <button class="tab" data-tab="library">牌库</button>
+      </div>
+    </div>
+
+    <!-- ================= 抽牌占卜 ================= -->
+    <section id="view-draw" hidden>
+      <textarea id="question" placeholder="输入你想问的占卜问题，例如：下个月我的工作会有怎样的转机？"></textarea>
+
+      <div id="choice-opts" hidden>
+        <input type="text" id="optA" placeholder="选项 A：（选填）例如「接受新工作」">
+        <input type="text" id="optB" placeholder="选项 B：（选填）例如「留在原公司」" style="margin-top:8px">
+        <input type="text" id="optC" placeholder="选项 C：（选填）例如「先学习半年再决定」" style="margin-top:8px" hidden>
+      </div>
+
+      <div class="spreads" id="spreads"></div>
+
+      <div class="methods" id="methods">
+        <button class="method active" data-method="random">随机抽取</button>
+        <button class="method" data-method="pick">从牌堆选牌</button>
+      </div>
+
+      <div id="deck-area" hidden>
+        <div class="deckbar">
+          <span class="deck-progress" id="deck-progress"></span>
+          <button class="btn btn-ghost" id="reshuffle">重新洗牌</button>
+          <button class="btn btn-ghost" id="clear-pick">清空已选</button>
+          <button class="btn btn-main" id="confirm-pick" style="margin-left:auto">确认出牌（0/N）</button>
+        </div>
+        <div class="deck-context" id="deck-context"></div>
+        <div class="deck-grid" id="deck-grid"></div>
+        <div class="tray" id="tray"><div class="tray-empty">点击上方数字牌进行选牌。</div></div>
+      </div>
+
+      <div class="draw-row">
+        <button class="btn btn-main btn-draw" id="draw-btn">随机抽 3 张牌</button>
+      </div>
+
+      <div class="result-bar" id="result-bar" hidden>
+        <span class="result-title" id="spread-title"></span>
+        <span class="result-actions">
+          <button class="result-btn" id="flip-all">全部翻开</button>
+          <button class="result-btn" id="clear-draw">清空</button>
+        </span>
+      </div>
+      <div class="cards" id="cards"></div>
+      <div id="post-draw" hidden>
+        <div class="hint" id="draw-hint"></div>
+
+        <textarea id="note" placeholder="写下你的解读或验证，可稍后编辑……"></textarea>
+
+        <div class="actions" style="margin-top:8px">
+          <button class="btn btn-main" id="save-btn">保存</button>
+          <button class="btn btn-save" id="new-question" title="清空当前问题、牌面与笔记，回到顶部开始新占卜">问问其他问题</button>
+          <span class="status" id="status"></span>
+        </div>
+        <div style="margin-top:12px">
+          <button class="btn btn-ghost" id="copy-draw" title="将本次抽牌的问题、时间、牌面与正逆位复制为自然语言文本，粘贴给其他 AI 辅助解牌">复制此次占卜结果到其他AI - 辅助解牌</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 占卜记录 ================= -->
+    <section id="view-records" hidden>
+      <h3 class="first">占卜记录</h3>
+      <div class="record-tools">
+        <button class="btn btn-ghost" id="export-json">导出 JSON</button>
+        <button class="btn btn-ghost" id="export-txt">导出文本</button>
+        <button class="btn btn-ghost" id="import-json">导入 JSON</button>
+        <button class="btn btn-ghost btn-danger" id="clear-all">🗑️ 清空全部</button>
+        <input type="file" id="import-file" accept=".json,application/json" style="display:none">
+      </div>
+      <div class="store-status" id="store-status"></div>
+      <div class="journal" id="journal"></div>
+    </section>
+
+    <!-- ================= 牌库 ================= -->
+    <section id="view-library" hidden>
+      <h3 class="first">牌库 · 78 张</h3>
+      <div class="lib-tools">
+        <input type="text" class="lib-search" id="lib-search" placeholder="搜索牌名 / 关键词">
+        <button class="chip active" data-filter="all">全部</button>
+        <button class="chip" data-filter="major">大阿卡纳</button>
+        <button class="chip" data-filter="wands">权杖</button>
+        <button class="chip" data-filter="cups">圣杯</button>
+        <button class="chip" data-filter="swords">宝剑</button>
+        <button class="chip" data-filter="pentacles">星币</button>
+      </div>
+      <div class="lib-grid" id="lib-grid"></div>
+    </section>
+  </div>
+
+  <!-- 占卜须知与制作信息 -->
+  <div class="disclaimer">
+    <div class="dis-title">占卜须知</div>
+    <p>1. 请不要在看到单张牌呈负面或逆位状态时，就根据简略牌意片面理解其整体状态；如果目前无法准确分析牌与牌之间的关系与结构，请寻求 AI 辅助或专业人士的帮助。</p>
+    <p>2. 牌对于未来的预测与推演，可能仅基于当下已经存在的因素；对未来的理解和态度不同，可能会让事情的发展与结果出现变化。请积极地面对牌的建议，而非将其奉为神谕。</p>
+    <p>3. 无论是对牌面的理解，还是基于牌对自身做出调整，都需要平静、精进而不失客观的内心。因此在看牌过程中，守护自身的内在安宁是一要务。</p>
+  </div>
+
+  <footer>无妄塔罗 · 数据仅存本机，可导出备份 · 无痕模式无法保存<br>
+  本页与配套程序仅供个人学习与分享使用，请勿用于商业用途。<br>
+  *代码部分由Deepseek harness完成 · 框架构想@yanabei · 补充和测试意见@Shan</footer>
+</div>
+
+<!-- 弹窗 -->
+<div class="modal-mask" id="modal">
+  <div class="modal">
+    <button class="modal-close" id="modal-close">✕</button>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<!-- 手机端牌堆选牌确认悬浮按钮 -->
+<button class="confirm-fab" id="confirm-fab" hidden>确认出牌（0/0）</button>
+
+<!-- 复制后前往 DeepSeek 弹窗 -->
+<div class="modal-mask" id="ds-modal">
+  <div class="modal ds-modal">
+    <button class="modal-close" id="ds-close" title="关闭">✕</button>
+    <div class="ds-body">
+      <div class="ds-icon">🐳</div>
+      <div class="ds-title">已复制 ✓</div>
+      <div class="ds-text">要前往 <b>DeepSeek 网页版</b> 继续解读吗？<br>解牌文本已在剪贴板，打开后直接粘贴即可。</div>
+      <div class="ds-actions">
+        <button class="btn btn-main" id="ds-go">前往 DeepSeek（网页版）</button>
+        <button class="btn btn-ghost" id="ds-later">稍后再说</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button class="back-top" id="back-top" hidden title="回到顶部" aria-label="回到顶部">↑</button>
+
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+/* =========================================================
+   牌库数据
+   ========================================================= */
+var ROMAN = ['0','I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX','XXI'];
+var RANKS = ['一','二','三','四','五','六','七','八','九','十','侍从','骑士','王后','国王'];
+var RANK_EN = ['Ace','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Page','Knight','Queen','King'];
+var SUIT_META = {
+  wands:{label:'权杖', en:'Wands', element:'火', letter:'W', imgPrefix:'Wands'},
+  cups:{label:'圣杯', en:'Cups', element:'水', letter:'C', imgPrefix:'Cups'},
+  swords:{label:'宝剑', en:'Swords', element:'风', letter:'S', imgPrefix:'Swords'},
+  pentacles:{label:'星币', en:'Pentacles', element:'土', letter:'P', imgPrefix:'Pents'}
+};
+
+/* [name, en, imgKey, upright, reversed] —— 大阿卡纳 imgKey 对应塔罗牌文件夹文件名 */
+var MAJOR = [
+  ['愚者','The Fool','RWS_Tarot_00_Fool','新的开始、自由、随心所欲的冒险','鲁莽、逃避现实、缺乏规划'],
+  ['魔术师','The Magician','RWS_Tarot_01_Magician','创造、能力、行动力、善用资源','欺骗、操纵、才华被浪费、计划不周'],
+  ['女祭司','The High Priestess','RWS_Tarot_02_High_Priestess','直觉、潜意识、内在智慧、静观','忽视直觉、隐藏真相、压抑、悬而未决'],
+  ['皇后','The Empress','RWS_Tarot_03_Empress','丰盛、滋养、创造力、母性','过度依赖、物质主义、停滞、忽视自我'],
+  ['皇帝','The Emperor','RWS_Tarot_04_Emperor','权威、秩序、稳定、领导力','专制、固执、控制欲、缺乏结构'],
+  ['教皇','The Hierophant','RWS_Tarot_05_Hierophant','传统、信仰、导师、遵循规范','叛逆、质疑权威、打破常规、非传统'],
+  ['恋人','The Lovers','RWS_Tarot_06_Lovers','爱情、结合、重要选择、和谐','不和谐、错误选择、分离、价值冲突'],
+  ['战车','The Chariot','RWS_Tarot_07_Chariot','意志力、胜利、掌控、前进','失控、受阻、犹豫、方向迷失'],
+  ['力量','Strength','RWS_Tarot_08_Strength','内在力量、勇气、耐心、温柔','软弱、自我怀疑、恐惧、缺乏自信'],
+  ['隐士','The Hermit','RWS_Tarot_09_Hermit','内省、独处、追寻真理、智慧','孤立、逃避、与世隔绝、拒绝帮助'],
+  ['命运之轮','Wheel of Fortune','RWS_Tarot_10_Wheel_of_Fortune','转变、转机、命运、好运','逆流、厄运、不可控、停滞'],
+  ['正义','Justice','RWS_Tarot_11_Justice','公正、真相、因果、平衡','偏见、不公、不诚实、失衡'],
+  ['倒吊人','The Hanged Man','RWS_Tarot_12_Hanged_Man','暂停、换位思考、牺牲、解脱','拖延、无谓牺牲、停滞、看不清'],
+  ['死神','Death','RWS_Tarot_13_Death','结束、蜕变、重生、放手','抗拒改变、困于过去、停滞、恐惧'],
+  ['节制','Temperance','RWS_Tarot_14_Temperance','平衡、调和、耐心、和谐','失衡、过度、冲突、急躁'],
+  ['恶魔','The Devil','RWS_Tarot_15_Devil','束缚、欲望、诱惑、执念','解脱、放下、觉醒、脱离束缚'],
+  ['高塔','The Tower','RWS_Tarot_16_Tower','剧变、颠覆、觉醒、瞬间崩塌','规避灾难、恐惧改变、破而未立'],
+  ['星星','The Star','RWS_Tarot_17_Star','希望、疗愈、灵感、信念','失望、悲观、缺乏信念、希望落空'],
+  ['月亮','The Moon','RWS_Tarot_18_Moon','幻觉、不安、潜意识、迷雾','真相浮现、解除困惑、看清现实'],
+  ['太阳','The Sun','RWS_Tarot_19_Sun','成功、喜悦、活力、光明','短期低迷、成功推迟、乐观过头'],
+  ['审判','Judgement','RWS_Tarot_20_Judgement','觉醒、重生、召唤、审判','自我怀疑、逃避、拒绝改变、自责'],
+  ['世界','The World','RWS_Tarot_21_World','完成、圆满、成就、周而复始','未完成、停滞、拖延、尾声']
+];
+
+/* 小牌：每套 14 张 [upright, reversed] */
+var MINOR_MEANINGS = {
+  wands:[
+    ['新的热情、事业开端、灵感萌发','缺乏动力、创意枯竭、计划受阻'],
+    ['规划、抉择、展望未来','犹豫不决、恐惧未知、安于现状'],
+    ['扩展、远见、向外发展','延迟、小看成果、合作分歧'],
+    ['庆典、稳定、安居乐业','基础不稳、庆祝延迟、变动'],
+    ['竞争、冲突、磨练','无谓争斗、达成和解、避免冲突'],
+    ['胜利、认可、骄傲','失败、自大、被低估'],
+    ['坚守立场、防御、勇气','放弃、不堪重负、退缩'],
+    ['快速进展、好消息、行动','延迟、受阻、冲动误事'],
+    ['坚毅、警惕、最后防线','精疲力竭、防备过度、放弃'],
+    ['承担重责、接近完成','过劳、负荷过重、放下负担'],
+    ['新灵感、热情、探索','三分钟热度、进展缓慢、空想'],
+    ['冒险、激情、行动','鲁莽、冲动、半途而废'],
+    ['自信、热情、独立','嫉妒、缺乏安全感、跋扈'],
+    ['领导力、远见、干劲','专断、急躁、滥用职权']
+  ],
+  cups:[
+    ['新感情、直觉开启、爱与喜悦','情感闭塞、爱被压抑、失落'],
+    ['结合、伙伴、相互吸引','关系失衡、分离、误解'],
+    ['友谊、庆祝、分享','过度社交、第三者、猜忌'],
+    ['反思、倦怠、重新审视','走出低潮、重获动力、接受'],
+    ['失落、悲伤、懊悔','释怀、接受、重新出发'],
+    ['怀旧、纯真、童年','困于过去、逃避现实、成长'],
+    ['幻想、选择、众多可能','认清现实、做出决定、自省'],
+    ['离开、寻找更高意义','一事无成、害怕改变、回头'],
+    ['满足、心愿达成、愉悦','表面满足、过度放纵、不满'],
+    ['幸福、家庭、圆满','家庭失和、理想破灭、幻灭'],
+    ['消息、直觉、灵感','情绪化、幻想、受骗'],
+    ['浪漫、邀请、理想主义','失望、逃避、情绪不稳'],
+    ['温柔、共情、直觉','情绪失控、过度敏感、失衡'],
+    ['成熟情感、关怀、包容','情感压抑、操纵、冷漠']
+  ],
+  swords:[
+    ['清醒、真相、突破','混乱、误判、沟通受阻'],
+    ['权衡、僵持、抉择','逃避、无法决断、揭开真相'],
+    ['心碎、悲伤、痛苦','疗愈、释怀、走出阴影'],
+    ['休息、沉思、恢复','倦怠、停滞、重新启动'],
+    ['冲突、争夺、胜负','和解、放下、止损'],
+    ['过渡、离开、疗愈之路','滞留、无法前移、沉溺'],
+    ['策略、隐瞒、自保','被识破、诚实、坦白'],
+    ['束缚、自限、困境','释放心灵、看清出路、自省'],
+    ['焦虑、噩梦、担忧','减轻焦虑、面对恐惧、释然'],
+    ['结束、绝境、最低点','复苏、触底反弹、重生'],
+    ['好奇、观察、警觉','八卦、刺探、轻浮'],
+    ['果断、行动、直率','鲁莽、咄咄逼人、冒进'],
+    ['理性、独立、洞察','冷酷、尖刻、偏执'],
+    ['理智、公正、权威','专制、刻薄、滥用权力']
+  ],
+  pentacles:[
+    ['机会、物质开端、实际','错失机会、财务不稳、延迟'],
+    ['平衡、灵活、周旋','失衡、分身乏术、过头'],
+    ['团队、技能、合作成果','分歧、配合不佳、缺少肯定'],
+    ['稳固、务实、节约','贪婪、守财、固步自封'],
+    ['匮乏、孤立、困境','好转、获得帮助、走出低谷'],
+    ['施与受、慷慨、平衡','依附、不公平、斤斤计较'],
+    ['耐心、评估、收割','徒劳、急于求成、效率低下'],
+    ['勤勉、专精、打磨技能','马虎、停滞、敷衍'],
+    ['独立、富足、自足','依赖、过度物质、孤立'],
+    ['财富、传承、家族','财损、家庭不和、短视'],
+    ['学习、机会、脚踏实地','拖延、三心二意、不切实际'],
+    ['务实、可靠、稳扎稳打','停滞、保守、无聊'],
+    ['务实、关怀、富足','过度付出、虚荣、匮乏感'],
+    ['成功、富足、稳健','贪婪、固执、物质至上']
+  ]
+};
+
+function pad2(n){ return (n<10?'0':'')+n; }
+
+/* 构建 78 张牌 */
+function buildDeck(){
+  var deck = [];
+  MAJOR.forEach(function(m,i){
+    deck.push({
+      idx: deck.length, key:'major', num:i, numLabel:ROMAN[i],
+      name:m[0], en:m[1], img:m[2],
+      arcana:'大阿卡纳', suit:'', suitEn:'', element:'',
+      upright:m[3], reversed:m[4]
+    });
+  });
+  Object.keys(MINOR_MEANINGS).forEach(function(sk){
+    var meta = SUIT_META[sk];
+    MINOR_MEANINGS[sk].forEach(function(mean,r){
+      deck.push({
+        idx: deck.length, key:sk, num:r+1, numLabel:(r+1),
+        name: meta.label + ' ' + RANKS[r], en: meta.en + ' ' + RANK_EN[r],
+        img: meta.imgPrefix + pad2(r+1),
+        arcana:'小阿卡纳', suit:meta.label, suitEn:meta.en, element:meta.element,
+        upright:mean[0], reversed:mean[1]
+      });
+    });
+  });
+  return deck;
+}
+var DECK = buildDeck();
+var IMGS = {"Cups01":"cards/Cups01.jpg","Cups02":"cards/Cups02.jpg","Cups03":"cards/Cups03.jpg","Cups04":"cards/Cups04.jpg","Cups05":"cards/Cups05.jpg","Cups06":"cards/Cups06.jpg","Cups07":"cards/Cups07.jpg","Cups08":"cards/Cups08.jpg","Cups09":"cards/Cups09.jpg","Cups10":"cards/Cups10.jpg","Cups11":"cards/Cups11.jpg","Cups12":"cards/Cups12.jpg","Cups13":"cards/Cups13.jpg","Cups14":"cards/Cups14.jpg","Pents01":"cards/Pents01.jpg","Pents02":"cards/Pents02.jpg","Pents03":"cards/Pents03.jpg","Pents04":"cards/Pents04.jpg","Pents05":"cards/Pents05.jpg","Pents06":"cards/Pents06.jpg","Pents07":"cards/Pents07.jpg","Pents08":"cards/Pents08.jpg","Pents09":"cards/Pents09.jpg","Pents10":"cards/Pents10.jpg","Pents11":"cards/Pents11.jpg","Pents12":"cards/Pents12.jpg","Pents13":"cards/Pents13.jpg","Pents14":"cards/Pents14.jpg","RWS_Tarot_00_Fool":"cards/RWS_Tarot_00_Fool.jpg","RWS_Tarot_01_Magician":"cards/RWS_Tarot_01_Magician.jpg","RWS_Tarot_02_High_Priestess":"cards/RWS_Tarot_02_High_Priestess.jpg","RWS_Tarot_03_Empress":"cards/RWS_Tarot_03_Empress.jpg","RWS_Tarot_04_Emperor":"cards/RWS_Tarot_04_Emperor.jpg","RWS_Tarot_05_Hierophant":"cards/RWS_Tarot_05_Hierophant.jpg","RWS_Tarot_06_Lovers":"cards/RWS_Tarot_06_Lovers.jpg","RWS_Tarot_07_Chariot":"cards/RWS_Tarot_07_Chariot.jpg","RWS_Tarot_08_Strength":"cards/RWS_Tarot_08_Strength.jpg","RWS_Tarot_09_Hermit":"cards/RWS_Tarot_09_Hermit.jpg","RWS_Tarot_10_Wheel_of_Fortune":"cards/RWS_Tarot_10_Wheel_of_Fortune.jpg","RWS_Tarot_11_Justice":"cards/RWS_Tarot_11_Justice.jpg","RWS_Tarot_12_Hanged_Man":"cards/RWS_Tarot_12_Hanged_Man.jpg","RWS_Tarot_13_Death":"cards/RWS_Tarot_13_Death.jpg","RWS_Tarot_14_Temperance":"cards/RWS_Tarot_14_Temperance.jpg","RWS_Tarot_15_Devil":"cards/RWS_Tarot_15_Devil.jpg","RWS_Tarot_16_Tower":"cards/RWS_Tarot_16_Tower.jpg","RWS_Tarot_17_Star":"cards/RWS_Tarot_17_Star.jpg","RWS_Tarot_18_Moon":"cards/RWS_Tarot_18_Moon.jpg","RWS_Tarot_19_Sun":"cards/RWS_Tarot_19_Sun.jpg","RWS_Tarot_20_Judgement":"cards/RWS_Tarot_20_Judgement.jpg","RWS_Tarot_21_World":"cards/RWS_Tarot_21_World.jpg","Swords01":"cards/Swords01.jpg","Swords02":"cards/Swords02.jpg","Swords03":"cards/Swords03.jpg","Swords04":"cards/Swords04.jpg","Swords05":"cards/Swords05.jpg","Swords06":"cards/Swords06.jpg","Swords07":"cards/Swords07.jpg","Swords08":"cards/Swords08.jpg","Swords09":"cards/Swords09.jpg","Swords10":"cards/Swords10.jpg","Swords11":"cards/Swords11.jpg","Swords12":"cards/Swords12.jpg","Swords13":"cards/Swords13.jpg","Swords14":"cards/Swords14.jpg","Wands01":"cards/Wands01.jpg","Wands02":"cards/Wands02.jpg","Wands03":"cards/Wands03.jpg","Wands04":"cards/Wands04.jpg","Wands05":"cards/Wands05.jpg","Wands06":"cards/Wands06.jpg","Wands07":"cards/Wands07.jpg","Wands08":"cards/Wands08.jpg","Wands09":"cards/Wands09.jpg","Wands10":"cards/Wands10.jpg","Wands11":"cards/Wands11.jpg","Wands12":"cards/Wands12.jpg","Wands13":"cards/Wands13.jpg","Wands14":"cards/Wands14.jpg"};
+var IMG_DIMS = {"Cups01":"250x432","Cups02":"250x433","Cups03":"250x429","Cups04":"250x429","Cups05":"250x428","Cups06":"250x430","Cups07":"250x433","Cups08":"250x431","Cups09":"250x431","Cups10":"250x433","Cups11":"250x430","Cups12":"250x433","Cups13":"250x431","Cups14":"250x428","Pents01":"250x433","Pents02":"250x432","Pents03":"250x429","Pents04":"250x432","Pents05":"250x432","Pents06":"250x433","Pents07":"250x431","Pents08":"250x430","Pents09":"250x433","Pents10":"250x430","Pents11":"250x432","Pents12":"250x432","Pents13":"250x433","Pents14":"250x434","RWS_Tarot_00_Fool":"250x419","RWS_Tarot_01_Magician":"250x433","RWS_Tarot_02_High_Priestess":"250x429","RWS_Tarot_03_Empress":"250x427","RWS_Tarot_04_Emperor":"250x429","RWS_Tarot_05_Hierophant":"250x431","RWS_Tarot_06_Lovers":"250x428","RWS_Tarot_07_Chariot":"250x432","RWS_Tarot_08_Strength":"250x431","RWS_Tarot_09_Hermit":"250x427","RWS_Tarot_10_Wheel_of_Fortune":"250x435","RWS_Tarot_11_Justice":"250x431","RWS_Tarot_12_Hanged_Man":"250x440","RWS_Tarot_13_Death":"250x432","RWS_Tarot_14_Temperance":"250x434","RWS_Tarot_15_Devil":"250x440","RWS_Tarot_16_Tower":"250x433","RWS_Tarot_17_Star":"250x431","RWS_Tarot_18_Moon":"250x432","RWS_Tarot_19_Sun":"250x431","RWS_Tarot_20_Judgement":"250x430","RWS_Tarot_21_World":"250x432","Swords01":"250x433","Swords02":"250x428","Swords03":"250x435","Swords04":"250x429","Swords05":"250x433","Swords06":"250x432","Swords07":"250x431","Swords08":"250x431","Swords09":"250x431","Swords10":"250x434","Swords11":"250x433","Swords12":"250x432","Swords13":"250x435","Swords14":"250x429","Wands01":"250x434","Wands02":"250x430","Wands03":"250x435","Wands04":"250x433","Wands05":"250x433","Wands06":"250x429","Wands07":"250x433","Wands08":"250x430","Wands09":"250x431","Wands10":"250x436","Wands11":"250x433","Wands12":"250x430","Wands13":"250x429","Wands14":"250x435"};
+function dimsOf(imgKey){
+  var d = IMG_DIMS[imgKey];
+  return d ? d.replace('x', '/') : '250/432';
+}
+
+/* =========================================================
+   牌阵定义
+   ========================================================= */
+var SPREADS = [
+  { id:'single', name:'一张牌', desc:'当下指引', count:1,
+    positions:[{label:'指引', sub:'当下指引'}] },
+  { id:'past', name:'三张牌', desc:'过去 · 现在 · 未来', count:3,
+    positions:[{label:'过去', sub:'背景与原因'},{label:'现在', sub:'当前状况'},{label:'未来', sub:'发展趋势'}] },
+  { id:'three', name:'无牌阵 · 三张', desc:'没有限定，就看三张', count:3,
+    positions:[{label:'第 1 张'},{label:'第 2 张'},{label:'第 3 张'}] },
+  { id:'choice', name:'二选一', desc:'A / B 两条路线', count:5,
+    positions:[
+      {label:'现状', sub:'当前核心问题'},
+      {label:'A · 发展', sub:'选项A的过程', branch:'a'},
+      {label:'A · 结果', sub:'选项A的结局', branch:'a'},
+      {label:'B · 发展', sub:'选项B的过程', branch:'b'},
+      {label:'B · 结果', sub:'选项B的结局', branch:'b'}
+    ] },
+  { id:'choice3', name:'三选一', desc:'A / B / C 三条路线', count:7,
+    positions:[
+      {label:'现状', sub:'当前核心问题'},
+      {label:'A · 发展', sub:'选项A的过程', branch:'a'},
+      {label:'A · 结果', sub:'选项A的结局', branch:'a'},
+      {label:'B · 发展', sub:'选项B的过程', branch:'b'},
+      {label:'B · 结果', sub:'选项B的结局', branch:'b'},
+      {label:'C · 发展', sub:'选项C的过程', branch:'c'},
+      {label:'C · 结果', sub:'选项C的结局', branch:'c'}
+    ] },
+  { id:'think', name:'我以为 · 实际上', desc:'两组三张牌对照', count:6,
+    positions:[
+      {label:'我以为 · 1', group:'think'},
+      {label:'我以为 · 2', group:'think'},
+      {label:'我以为 · 3', group:'think'},
+      {label:'实际上 · 1', group:'actual'},
+      {label:'实际上 · 2', group:'actual'},
+      {label:'实际上 · 3', group:'actual'}
+    ] }
+];
+
+/* =========================================================
+   状态与存储
+   ========================================================= */
+var STORE_KEY = 'tarot.rws.readings.v1';
+var state = {
+  tab:'draw',
+  spreadId:'past',
+  method:'random',
+  allowReverse:true,
+  deckOrder:[],          // 洗牌后的牌顺序：DECK 索引数组
+  picked:[],             // 从牌堆选中的 DECK 索引（按点击顺序）
+  draw:[],               // 当前牌阵 {card, pos, orientation, flipped}
+  optA:'', optB:'', optC:'',
+  note:'',
+  autoSavedId:null,       // 本次抽牌自动保存的记录 id（重抽/更新时替换，不重复新建）
+  readings:[],            // 记录由 initStorage() 在探测可用存储后加载（localStorage 被禁时走 IndexedDB）
+  libFilter:'all', libSearch:''
+};
+
+/* ---------- 存储：localStorage 为主 + IndexedDB 镜像 + 内存兜底 ----------
+   iOS Safari（尤其是 iPhone 无痕模式 / 文件预览模式）可能禁止 localStorage，
+   这里做成三级降级：localStorage → IndexedDB → 内存，并在界面上显示当前状态。 */
+var store = { mode:'localStorage', idbReady:false, idbDb:null };
+
+function lsProbe(){
+  try{
+    var k = '__tarot_probe__';
+    localStorage.setItem(k, '1');
+    localStorage.removeItem(k);
+    return true;
+  }catch(e){ return false; }
+}
+/* 读取 localStorage 里的记录；被禁用/读取异常时返回 null（而不是空数组），
+   以便调用方区分「真的没有记录」和「读不到」 */
+function lsReadReadings(){
+  if(!lsProbe()) return null;
+  try{
+    var raw = localStorage.getItem(STORE_KEY);
+    if(!raw) return [];
+    var p = JSON.parse(raw);
+    return Array.isArray(p) ? p : [];
+  }catch(e){ return null; }
+}
+/* 写入 localStorage；失败（配额满 / 被禁）时返回 false，并清掉可能的半截写入 */
+function lsWriteReadings(val){
+  if(!lsProbe()) return false;
+  try{
+    localStorage.setItem(STORE_KEY, JSON.stringify(val));
+    return true;
+  }catch(e){
+    try{ localStorage.removeItem(STORE_KEY); }catch(e2){}
+    return false;
+  }
+}
+function persistReadings(){
+  var ok = lsWriteReadings(state.readings);
+  store.mode = ok ? 'localStorage' : (store.idbReady ? 'idb' : 'memory');
+  // IndexedDB 无条件写一次镜像：idbPut 内部会判断数据库是否就绪，
+  // 若此刻还没打开完，会在 initStorage 完成后用最新记录补写（见 initStorage）
+  idbPut(state.readings);
+  updateStorageStatus();
+}
+function updateStorageStatus(){
+  var el = document.getElementById('store-status');
+  if(!el) return;
+  var msg, cls = '';
+  if(store.mode === 'localStorage'){
+    msg = '✅ 存储方式：浏览器本地存储（localStorage + IndexedDB 镜像）。数据只保存在本机，换设备/换浏览器不会同步，请定期「导出」备份。';
+  } else if(store.mode === 'idb'){
+    msg = '⚠️ 存储方式：IndexedDB 后备存储（本环境禁止 localStorage，已自动切换）。刷新页面后仍可恢复，但请定期「导出」备份更稳妥。';
+    cls = 'warn';
+  } else {
+    msg = '❌ 警告：当前浏览器禁止所有本地存储（常见于 iPhone 无痕模式或文件预览模式），记录只保留在本次会话，刷新即丢失！请立即「导出 JSON」备份；然后改用「电脑启动服务器 + 手机 Safari 访问」的方式打开本页（见页脚说明），即可正常保存。';
+    cls = 'err';
+  }
+  el.className = 'store-status' + (cls ? ' ' + cls : '');
+  el.textContent = msg;
+}
+function idbOpen(){
+  return new Promise(function(res){
+    try{
+      if(typeof indexedDB === 'undefined'){ res(false); return; }
+      var rq = indexedDB.open('tarot-readings', 1);
+      rq.onupgradeneeded = function(e){
+        try{ e.target.result.createObjectStore('kv'); }catch(err){}
+      };
+      rq.onsuccess = function(e){
+        store.idbDb = e.target.result;
+        store.idbReady = true;
+        res(true);
+      };
+      rq.onerror = function(){ res(false); };
+      rq.onblocked = function(){ res(false); };
+    }catch(e){ res(false); }
+  });
+}
+function idbGet(){
+  return new Promise(function(res){
+    if(!store.idbReady){ res(null); return; }
+    try{
+      var tx = store.idbDb.transaction('kv', 'readonly');
+      var rq = tx.objectStore('kv').get('readings');
+      rq.onsuccess = function(){ res(rq.result || null); };
+      rq.onerror = function(){ res(null); };
+    }catch(e){ res(null); }
+  });
+}
+function idbPut(val){
+  return new Promise(function(res){
+    if(!store.idbReady){ res(false); return; }
+    try{
+      var tx = store.idbDb.transaction('kv', 'readwrite');
+      tx.objectStore('kv').put(val, 'readings');
+      tx.oncomplete = function(){ res(true); };
+      tx.onerror = function(){ res(false); };
+      tx.onabort = function(){ res(false); };
+    }catch(e){ res(false); }
+  });
+}
+function initStorage(){
+  var lsOk = lsProbe();
+  store.mode = lsOk ? 'localStorage' : 'memory';
+  updateStorageStatus();
+
+  // 1) localStorage 可用：直接同步加载（旧数据在这里；IndexedDB 仅作镜像 + 补救上次降级写入的数据）
+  if(lsOk){
+    var fromLs = lsReadReadings();
+    if(fromLs) state.readings = fromLs;
+  }
+
+  // 2) 尝试 IndexedDB：localStorage 被禁时它就是唯一的持久化存储
+  idbOpen().then(function(ok){
+    if(!ok){
+      if(!lsOk) store.mode = 'memory';           // 两者都不可用：仅本次会话
+      updateStorageStatus();
+      return;
+    }
+    idbGet().then(function(v){
+      var fromIdb = (v && Array.isArray(v)) ? v : null;
+      // localStorage 不可用：从 IndexedDB 恢复记录（修复「刷新后记录消失」）
+      if(!lsOk && fromIdb && fromIdb.length){
+        state.readings = fromIdb;
+      }
+      // 首次使用 IndexedDB 且镜像为空：把已有记录灌进去做镜像
+      if(lsOk && state.readings.length && (!fromIdb || !fromIdb.length)){
+        idbPut(state.readings);
+      }
+      // localStorage 被禁：把数据库打开期间产生的记录补写进 IndexedDB，
+      // 避免「打开很快、抽牌早于 idbOpen 完成」时丢掉那次抽牌
+      if(!lsOk && state.readings.length) idbPut(state.readings);
+      store.mode = lsOk ? 'localStorage' : 'idb';
+      updateRecBadge();
+      if(state.tab === 'records') renderRecords();
+      updateStorageStatus();
+    });
+  });
+}
+function fmtDate(ts){
+  var d = new Date(ts); if(isNaN(d)) return '';
+  var p = function(n){ return (n<10?'0':'')+n; };
+  return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes());
+}
+function $id(id){ return document.getElementById(id); }
+function shuffleArr(a){
+  for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; }
+  return a;
+}
+
+/* =========================================================
+   通用 UI
+   ========================================================= */
+/* 滚动时同步「回到顶部」按钮的显隐（手机端同样生效，可替代滚动条） */
+if(window && window.addEventListener) window.addEventListener('scroll', onPageScroll, {passive: true});
+
+var toastTimer = null;
+function toast(msg){
+  var t = $id('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 2200);
+}
+
+function spreadById(id){
+  for(var i=0;i<SPREADS.length;i++) if(SPREADS[i].id===id) return SPREADS[i];
+  return SPREADS[0];
+}
+/* 选项型牌阵（二选一 / 三选一）选项展示（选项为选填，不填也能抽牌） */
+function spreadNeedsOpts(){
+  var sp = spreadById(state.spreadId);
+  return sp.id === 'choice' || sp.id === 'choice3';
+}
+function updateChoiceOpts(){
+  $id('choice-opts').hidden = !spreadNeedsOpts();
+  $id('optC').hidden = state.spreadId !== 'choice3';
+}
+
+/* =========================================================
+   牌阵区渲染
+   ========================================================= */
+function renderSpreads(){
+  $id('spreads').innerHTML = SPREADS.map(function(s){
+    return '<button class="spread-button'+(s.id===state.spreadId?' active':'')+'" data-id="'+s.id+'">'+
+      '<div class="spread-name">'+s.name+'</div><div class="spread-desc">'+s.desc+'</div></button>';
+  }).join('');
+}
+
+function cardBackHTML(num, starSize){
+  return '<div class="card-face back"><div class="bk-in">'+
+    '<div class="star" style="font-size:'+(starSize||30)+'px">✦</div>'+
+    '<div class="bk-sym">TAROT</div>'+
+    (num ? '<div class="bk-num" style="font-size:'+(starSize||30)+'px;color:#d9b36a;text-shadow:0 0 10px rgba(217,179,106,.8)">'+num+'</div>' : '')+
+  '</div></div>';
+}
+
+function numTagLabel(c){
+  if(c.arcana === '大阿卡纳') return c.numLabel;
+  return SUIT_META[c.key].letter + pad2(c.num);
+}
+
+/* 出牌后收起「抽牌按钮 / 抽取方式 / 牌阵选择 / 选项输入 / 数字牌堆」等布阵控件，
+   让注意力集中在牌面上；点「问问其他问题」清空本次占卜后自动恢复 */
+function setSetupVisible(show){
+  var ids = ['draw-btn','methods','spreads','choice-opts','deck-area'];
+  for(var i=0;i<ids.length;i++){
+    var el = $id(ids[i]);
+    if(!el) continue;
+    if(!show){
+      el.hidden = true;
+    } else if(ids[i] === 'choice-opts'){
+      el.hidden = !spreadNeedsOpts();   // 仅二选一 / 三选一 需要选项输入
+    } else if(ids[i] === 'deck-area'){
+      el.hidden = state.method !== 'pick';   // 仅选牌模式需要数字牌堆
+    } else {
+      el.hidden = false;
+    }
+  }
+}
+
+function renderCards(){
+  var spread = spreadById(state.spreadId);
+  var wrap = $id('cards');
+  var hasDraw = state.draw.length > 0;
+  setSetupVisible(!hasDraw);
+  if(!hasDraw){
+    wrap.innerHTML = '';
+    $id('result-bar').hidden = true;
+    $id('post-draw').hidden = true;
+    return;
+  }
+  $id('post-draw').hidden = false;
+  var spT = spreadById(state.spreadId);
+  $id('result-bar').hidden = false;
+  $id('spread-title').textContent = spT.name + ' · ' + spT.desc + ' · 抽到 ' + state.draw.length + ' 张';
+  var anyUnflipped = state.draw.some(function(d){ return !d.flipped; });
+  $id('flip-all').textContent = anyUnflipped ? '全部翻开' : '全部合上';
+
+  var isSingle = spread.id==='single';
+  if(spread.id === 'choice' || spread.id === 'choice3'){
+    var branches = { center:[], a:[], b:[], c:[] };
+    state.draw.forEach(function(d){ branches[d.pos.branch||'center'].push(d); });
+    var optLabel = { a:(state.optA||'未填写'), b:(state.optB||'未填写'), c:(state.optC||'未填写') };
+    var branchKeys = ['a','b','c'].filter(function(bk){ return branches[bk].length > 0; });
+    // 选项行说明
+    var optLine = '';
+    if(branchKeys.length){
+      optLine = '<div class="choice-opts-line">' + branchKeys.map(function(bk){
+        return '选项 '+bk.toUpperCase()+'：'+escapeHtml(optLabel[bk]);
+      }).join(' ｜ ') + '</div>';
+    }
+    // 发展 / 结果 分行
+    var dev = [], res = [];
+    branchKeys.forEach(function(bk){
+      branches[bk].forEach(function(c){
+        ((c.pos.label||'').indexOf('结果') >= 0 ? res : dev).push(c);
+      });
+    });
+    // 布局：选项说明 → 现状（居中）→ 发展（A/B[/C]）→ 结果（A/B[/C]）
+    var html = optLine +
+      '<div class="choice-grid">'+
+      '<div class="choice-row">'+branches.center.map(cardWrapHTML).join('')+'</div>'+
+      '<div class="choice-row">'+dev.map(cardWrapHTML).join('')+'</div>'+
+      '<div class="choice-row">'+res.map(cardWrapHTML).join('')+'</div>'+
+      '</div>';
+    wrap.innerHTML = html;
+  } else if(spread.id === 'think'){
+    var thinkCards = state.draw.filter(function(d){ return d.pos.group==='think'; });
+    var actualCards = state.draw.filter(function(d){ return d.pos.group==='actual'; });
+    wrap.innerHTML =
+      '<div class="think-layout">'+
+      '<div class="think-group"><div class="think-head">我以为<small>我脑子里的想法</small></div>'+
+        '<div class="cards">'+thinkCards.map(cardWrapHTML).join('')+'</div></div>'+
+      '<div class="think-group actual"><div class="think-head">实际上<small>事情真实的样子</small></div>'+
+        '<div class="cards">'+actualCards.map(cardWrapHTML).join('')+'</div></div>'+
+      '</div>';
+  } else {
+    wrap.innerHTML = '<div class="cards" style="margin-top:0">'+state.draw.map(cardWrapHTML).join('')+'</div>';
+  }
+}
+
+function cardWrapHTML(d){
+  var c = d.card;
+  var posCls = d.pos.branch==='a' ? 'a' : (d.pos.branch==='b' ? 'b' : (d.pos.branch==='c' ? 'c' : ''));
+  var revCls = d.orientation==='down' ? 'reversed' : '';
+  var down = d.orientation === 'down';
+  var orientLabel = down ? '逆位' : '正位';
+  var orientCls = down ? 'down' : 'up';
+  var big = state.spreadId==='single' ? ' big' : '';
+  return '<div class="card-wrap'+big+'">'+
+    '<div class="position '+posCls+'">'+d.pos.label+'<small>'+(d.pos.sub||'')+'</small></div>'+
+    '<div class="cardbox'+(d.flipped?' flipped':'')+'" style="aspect-ratio:'+dimsOf(c.img)+'" data-card="'+d.card.idx+'">'+
+      cardBackHTML('', 26)+
+      '<div class="card-face front '+revCls+'">'+
+        '<img src="'+IMGS[c.img]+'" alt="'+c.name+'" draggable="false">'+
+        '<span class="num-tag">'+numTagLabel(c)+'</span>'+
+        '<span class="orient-tag '+orientCls+'">'+orientLabel+'</span>'+
+      '</div>'+
+    '</div>'+
+    /* 牌名下只显示牌意文字；正/逆位由牌面右下角的标签表示，不再在此处重复 */
+    '<div class="card-title'+(d.flipped?' show':'')+'">'+c.name+'<span class="en">'+c.en+'</span>'+
+    '<span class="short">'+(down?c.reversed:c.upright)+'</span></div>'+
+  '</div>';
+}
+
+/* =========================================================
+   抽牌逻辑
+   ========================================================= */
+function expectCount(){ return spreadById(state.spreadId).count; }
+
+function clearDraw(){
+  state.draw = [];
+  state.picked = [];
+  newDeck();
+  renderCards(); renderDeck();
+  $id('status').textContent = '';
+}
+
+function doRandomDraw(){
+  if(!deckReady()) newDeck();
+  var n = expectCount();
+  shuffleArr(state.deckOrder);
+  state.draw = state.deckOrder.slice(0,n).map(function(ci, i){
+    return makeDrawItem(ci, i);
+  });
+  $id('status').textContent = '';
+  renderCards();
+  autoSaveDraw();
+  scrollToTop();          // 出牌后回到顶部，从问题开始往下看
+}
+
+function doPickDraw(){
+  var n = expectCount();
+  if(state.picked.length < n){ toast('请先从牌堆选满 '+n+' 张牌'); return; }
+  state.draw = state.picked.slice(0,n).map(function(ci, i){ return makeDrawItem(ci, i); });
+  renderCards();
+  // 每次出牌后牌堆自动重新洗一遍，方便下一轮抽取
+  newDeck();
+  state.picked = [];
+  renderDeck();
+  $id('deck-progress').textContent = '已出牌 ✓ · 牌堆已重新洗牌，可再次抽取';
+  autoSaveDraw();
+  scrollToTop();          // 出牌后回到顶部，从问题开始往下看
+}
+
+function makeDrawItem(ci, posIdx){
+  var spread = spreadById(state.spreadId);
+  var reversed = state.allowReverse && Math.random() < 0.5;
+  return {
+    card: DECK[ci],
+    pos: spread.positions[posIdx],
+    orientation: reversed ? 'down' : 'up',
+    flipped: false
+  };
+}
+
+/* 单张牌翻牌 UI（局部切换，不重渲染整个牌阵区，避免所有牌动画重播；
+   牌名区预留空间 + 淡入浮起，等翻牌动画（0.55s）播完再显示，不打扰布局 */
+function setCardFlippedUI(box, flipped){
+  box.classList.toggle('flipped', !!flipped);
+  var wrapEl = box.closest ? box.closest('.card-wrap') : null;
+  var t = wrapEl ? wrapEl.querySelector('.card-title') : null;
+  if(!t) return;
+  if(box._titleTimer) clearTimeout(box._titleTimer);
+  if(flipped){
+    box._titleTimer = setTimeout(function(){ t.classList.add('show'); }, 550);
+  } else {
+    t.classList.remove('show');
+  }
+}
+function updateFlipAllLabel(){
+  var any = state.draw.some(function(d){ return !d.flipped; });
+  $id('flip-all').textContent = any ? '全部翻开' : '全部合上';
+}
+
+/* =========================================================
+   牌堆（选牌）
+   ========================================================= */
+function deckReady(){ return state.deckOrder.length === 78; }
+function newDeck(){
+  state.deckOrder = [];
+  for(var i=0;i<78;i++) state.deckOrder.push(i);
+  shuffleArr(state.deckOrder);
+}
+
+function renderDeck(){
+  if(state.method !== 'pick' || !deckReady()) return;
+  var grid = $id('deck-grid');
+  var used = {};
+  state.picked.forEach(function(ci){ used[ci] = true; });
+  var n = expectCount();
+  var html = '';
+  for(var pos=0; pos<78; pos++){
+    var ci = state.deckOrder[pos];
+    var num = pos+1;
+    var isUsed = used[ci];
+    var pickIdx = state.picked.indexOf(ci);
+    var sel = pickIdx >= 0;
+    html += '<div class="deck-card'+(sel?' selected':'')+(isUsed?' used':'')+'" data-pos="'+pos+'" data-ci="'+ci+'">'+
+      '<div class="bk-deco"></div>'+
+      '<div class="star">✦</div>'+
+      '<div class="bk-num">'+num+'</div>'+
+      (sel ? '<span class="pickno">'+(pickIdx+1)+'</span>' : '')+
+    '</div>';
+  }
+  grid.innerHTML = html;
+  var left = n - state.picked.length;
+  var prog = $id('deck-progress');
+  if(prog) prog.textContent = '已选 ' + state.picked.length + ' / ' + n + ' 张';
+  // 未选满时给出明确提示：还差几张、正在选哪个位置、选满后要做什么
+  var ctx = $id('deck-context');
+  if(ctx){
+    if(state.picked.length === 0){
+      ctx.className = 'deck-context';
+      ctx.innerHTML = '👆 请从上方牌堆中点选 <b>' + n + ' 张</b>牌，已选 ' + n + ' 张后才能确认出牌。';
+    } else if(left > 0){
+      var sp = spreadById(state.spreadId);
+      var nextPos = sp.positions[state.picked.length];
+      ctx.className = 'deck-context';
+      ctx.innerHTML = '还差 <b>' + left + '</b> 张（已选 ' + state.picked.length + '/' + n + '）。' +
+        (nextPos ? '下一张为「<b>' + escapeHtml(nextPos.label) + '</b>」' +
+          (nextPos.sub ? '（' + escapeHtml(nextPos.sub) + '）' : '') + '。' : '') +
+        '点已选的数字牌可取消重选，选满后点「确认出牌」。';
+    } else {
+      ctx.className = 'deck-context done';
+      ctx.innerHTML = '✅ 已选满 ' + n + ' 张，可以确认出牌了。点「确认出牌」，出牌后再点击牌面逐张翻开。';
+    }
+  }
+  var confirmBtn = $id('confirm-pick');
+  if(confirmBtn){
+    confirmBtn.textContent = (left > 0 ? '确认出牌（还差 ' + left + ' 张）' : '确认出牌（' + n + '/' + n + '）');
+    confirmBtn.disabled = state.picked.length !== n;
+  }
+  // 悬浮确认按钮：手机端牌堆很长，固定底部随时可确认
+  var fab = $id('confirm-fab');
+  if(fab){
+    fab.hidden = state.picked.length === 0;
+    fab.textContent = '确认出牌（' + (left > 0 ? '还差 ' + left + ' 张' : n + '/' + n) + '）';
+  }
+  // 托盘
+  var tray = $id('tray');
+  if(!tray) return;
+  if(state.picked.length===0){
+    tray.innerHTML = '';
+  } else {
+    tray.innerHTML = state.picked.map(function(ci, i){
+      // 已选顺序只显示序号，不显示牌名（保持神秘感）
+      return '<div class="tray-card">'+(i+1)+'</div>';
+    }).join('');
+  }
+}
+
+function toggleTab(tab){
+  state.tab = tab;
+  document.querySelectorAll('.tab').forEach(function(b){
+    b.classList.toggle('active', b.dataset.tab===tab);
+  });
+  $id('view-draw').hidden = tab!=='draw';
+  $id('view-records').hidden = tab!=='records';
+  $id('view-library').hidden = tab!=='library';
+  if(tab==='records') renderRecords();
+  if(tab==='library') renderLibrary();
+}
+
+/* =========================================================
+   记录
+   ========================================================= */
+function findRec(id){
+  for(var i=0;i<state.readings.length;i++){ if(state.readings[i].id === id) return state.readings[i]; }
+  return null;
+}
+function buildRecord(id){
+  var spread = spreadById(state.spreadId);
+  return {
+    id: id || ('r'+Date.now()+Math.floor(Math.random()*1000)),
+    ts: Date.now(),
+    question: $id('question').value.trim(),
+    spread: spread.id,
+    spreadName: spread.name,
+    optA: (state.optA||'').trim(), optB: (state.optB||'').trim(), optC: (state.optC||'').trim(),
+    cards: state.draw.map(function(d){
+      return {
+        cardId: d.card.idx, name: d.card.name, en: d.card.en, img: d.card.img,
+        position: d.pos.label, orientation: d.orientation,
+        upright: d.card.upright, reversed: d.card.reversed
+      };
+    }),
+    note: $id('note').value.trim()
+  };
+}
+/* 抽牌完成后自动保存；同一问题重抽时替换原记录，避免重复 */
+function autoSaveDraw(){
+  if(state.draw.length === 0) return;
+  var q = $id('question').value.trim();
+  var replaced = false;
+  if(state.autoSavedId){
+    var old = findRec(state.autoSavedId);
+    if(old && old.question === q){
+      var idx = state.readings.indexOf(old);
+      state.readings[idx] = buildRecord(old.id);
+      replaced = true;
+    }
+  }
+  if(!replaced){
+    var rec = buildRecord();
+    state.readings.unshift(rec);
+    state.autoSavedId = rec.id;
+  }
+  persistReadings();
+  updateRecBadge();
+  $id('status').textContent = '✓ 已自动保存' + (replaced ? ' · 同问题重抽已更新' : '') + ' · 补充笔记会自动同步';
+  toast(replaced ? '已自动保存（更新本次记录）' : '已自动保存到占卜记录');
+  if(state.tab === 'records') renderRecords();
+}
+/* 笔记/问题编辑后，自动同步到当前抽牌的记录 */
+function syncAutoRecordFields(){
+  if(!state.autoSavedId || state.draw.length === 0) return;
+  var rec = findRec(state.autoSavedId);
+  if(!rec) return;
+  rec.question = $id('question').value.trim();
+  rec.optA = (state.optA||'').trim();
+  rec.optB = (state.optB||'').trim();
+  rec.optC = (state.optC||'').trim();
+  rec.note = $id('note').value.trim();
+  persistReadings();
+  if(state.tab === 'records') renderRecords();
+}
+/* 换个问题：一键回到初始状态（清空问题/选项/牌/笔记，重新洗牌并回到顶部） */
+function scrollToTop(){
+  try{
+    if(typeof window !== 'undefined' && window.scrollTo){ window.scrollTo({top:0, behavior:'smooth'}); return; }
+  }catch(e){}
+  try{
+    var sc = document.getElementById('question');
+    if(sc && sc.scrollIntoView) sc.scrollIntoView({behavior:'smooth', block:'start'});
+  }catch(e){}
+}
+/* 回到顶部悬浮按钮：向下滚动超过一定距离才出现 */
+function updateBackTop(){
+  var b = document.getElementById('back-top');
+  if(!b) return;
+  var y = 0;
+  try{ y = window.pageYOffset || window.scrollY || (document.documentElement && document.documentElement.scrollTop) || 0; }catch(e){}
+  b.hidden = !(y > 320);
+}
+var backTopTick = null;
+function onPageScroll(){
+  if(backTopTick) return;
+  var raf = (typeof window !== 'undefined' && window.requestAnimationFrame) ? window.requestAnimationFrame : null;
+  if(raf) backTopTick = raf(function(){ backTopTick = null; updateBackTop(); });
+  else { backTopTick = setTimeout(function(){ backTopTick = null; updateBackTop(); }, 120); }
+}
+window.addEventListener('scroll', onPageScroll, {passive: true});
+function resetToNewQuestion(){
+  $id('question').value = '';
+  $id('optA').value = '';
+  $id('optB').value = '';
+  $id('optC').value = '';
+  $id('note').value = '';
+  state.optA = ''; state.optB = ''; state.optC = '';
+  state.draw = [];
+  state.picked = [];
+  state.autoSavedId = null;
+  newDeck();
+  renderCards(); renderDeck();
+  $id('status').textContent = '';
+  scrollToTop();
+  toast('已清空，请填写新问题');
+}
+function saveCurrent(){
+  if(state.draw.length===0){ toast('请先抽牌再保存'); return; }
+  if(state.autoSavedId){
+    var old = findRec(state.autoSavedId);
+    if(old){
+      var idx = state.readings.indexOf(old);
+      state.readings[idx] = buildRecord(old.id);
+      persistReadings();
+      $id('status').textContent = '✓ 已更新记录 ' + fmtDate(Date.now());
+      updateRecBadge();
+      toast('已更新占卜记录');
+      if(state.tab === 'records') renderRecords();
+      return;
+    }
+  }
+  var rec = buildRecord();
+  state.readings.unshift(rec);
+  state.autoSavedId = rec.id;
+  persistReadings();
+  $id('status').textContent = '✓ 已保存 ' + fmtDate(rec.ts);
+  updateRecBadge();
+  toast('已保存到占卜记录');
+  if(state.tab === 'records') renderRecords();
+}
+
+function updateRecBadge(){
+  var b = $id('rec-count');
+  b.hidden = state.readings.length===0;
+  b.textContent = state.readings.length;
+}
+
+function renderRecords(){
+  disarmDeleteBtn();
+  if(editingNoteId && !findRec(editingNoteId)) editingNoteId = null;
+  if(editingQuestionId && !findRec(editingQuestionId)) editingQuestionId = null;
+  Object.keys(expandedIds).forEach(function(id){ if(!findRec(id)) delete expandedIds[id]; });
+  var el = $id('journal');
+  if(state.readings.length===0){
+    el.innerHTML = '<div class="empty"><span class="e-ico">📖</span>还没有占卜记录。<br>回到「抽牌占卜」完成一次抽牌并点击保存。</div>';
+    return;
+  }
+  el.innerHTML = state.readings.map(function(r){
+    var thumbs = r.cards.map(function(c){
+      var rev = c.orientation === 'down' ? 'rev' : '';
+      return '<img src="'+IMGS[c.img]+'" alt="'+c.name+'" title="'+c.name+'" data-card-id="'+c.cardId+'" data-orient="'+c.orientation+'" style="aspect-ratio:'+dimsOf(c.img)+'" class="'+rev+'">';
+    }).join('');
+    return '<div class="entry" data-id="'+r.id+'">'+
+      '<div class="entry-head">'+
+        '<div><div class="entry-q">'+(r.question? escapeHtml(r.question) : '（未记录问题）')+'</div>'+
+        '<div class="entry-meta">'+fmtDate(r.ts)+' · '+escapeHtml(r.spreadName)+
+          (r.optA&&r.optB ? ' · A：'+escapeHtml(r.optA)+'｜B：'+escapeHtml(r.optB)+(r.optC?'｜C：'+escapeHtml(r.optC):'') : '')+
+        ' · '+r.cards.length+' 张</div></div>'+
+        '<div class="entry-actions">'+
+          '<button class="entry-copy" data-action="copy" title="复制为自然语言文本（问题、时间与牌面含正逆位），粘贴给其他 AI 辅助解牌">复制</button>'+
+          '<button class="entry-del" data-action="del" title="删除">删除</button>'+
+        '</div>'+
+      '</div>'+
+      '<div class="entry-thumbs">'+thumbs+'</div>'+
+      '<div class="entry-body"'+(expandedIds[r.id] ? '' : ' hidden')+'>'+
+        '<div class="entry-cards">'+r.cards.map(function(c){
+          var oCls = c.orientation==='down' ? ' down' : '';
+          var oText = c.orientation==='down' ? '逆位' : '正位';
+          var mean = c.orientation==='down' ? c.reversed : c.upright;
+          return '<div class="entry-card" data-card-id="'+c.cardId+'">'+
+            '<img src="'+IMGS[c.img]+'" alt="'+c.name+'" class="'+(c.orientation==='down'?'rev':'')+'" data-orient="'+c.orientation+'" style="aspect-ratio:'+dimsOf(c.img)+'">'+
+            '<div><div class="entry-pos">'+escapeHtml(c.position)+'</div>'+
+            '<div class="entry-cname">'+escapeHtml(c.name)+'<span class="o'+oCls+'">'+oText+'</span></div>'+
+            '<div class="entry-mean">'+escapeHtml(mean)+'</div></div></div>';
+        }).join('')+'</div>'+
+        buildQuestionBlock(r)+
+        buildNoteBlock(r)+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, function(ch){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];
+  });
+}
+
+/* ---------- 记录笔记 / 问题编辑 ---------- */
+var editingNoteId = null;       // 正在编辑笔记的记录 id
+var editingQuestionId = null;   // 正在编辑问题的记录 id
+var expandedIds = {};   // 已展开的记录 id（重渲染后保持展开状态）
+function buildNoteBlock(r){
+  if(editingNoteId === r.id){
+    return '<div class="entry-note editor">'+
+      '<textarea id="note-edit-input" placeholder="写下你的解读或验证结果……">'+escapeHtml(r.note||'')+'</textarea>'+
+      '<div class="entry-note-actions">'+
+        '<button class="btn-edit-mini primary" data-action="note-save">保存笔记</button>'+
+        '<button class="btn-edit-mini" data-action="note-cancel">取消</button>'+
+      '</div></div>';
+  }
+  return '<div class="entry-note">📝 '+(r.note ? escapeHtml(r.note) : '<span class="note-empty">（还未写笔记）</span>')+
+    '<button class="entry-note-edit" data-action="note-edit">'+(r.note?'编辑':'添加笔记')+'</button></div>';
+}
+/* 记录里的「问题」可随时修改（自动保存/重渲染后保持一致） */
+function buildQuestionBlock(r){
+  if(editingQuestionId === r.id){
+    return '<div class="entry-q-block editor">'+
+      '<textarea id="q-edit-input" placeholder="修改这次占卜的问题……">'+escapeHtml(r.question||'')+'</textarea>'+
+      '<div class="entry-note-actions">'+
+        '<button class="btn-edit-mini primary" data-action="q-save">保存问题</button>'+
+        '<button class="btn-edit-mini" data-action="q-cancel">取消</button>'+
+      '</div></div>';
+  }
+  return '<div class="entry-q-block">❓ '+(r.question ? escapeHtml(r.question) : '<span class="note-empty">（未记录问题）</span>')+
+    '<button class="entry-q-edit" data-action="q-edit">'+(r.question?'修改问题':'添加问题')+'</button></div>';
+}
+function updateRecordNote(id, note){
+  var rec = findRec(id);
+  if(!rec) return false;
+  rec.note = note;
+  persistReadings();
+  updateRecBadge();
+  return true;
+}
+function updateRecordQuestion(id, question){
+  var rec = findRec(id);
+  if(!rec) return false;
+  rec.question = question;
+  persistReadings();
+  updateRecBadge();
+  return true;
+}
+
+/* 删除确认：不用原生 confirm()（iOS 的 WKWebView 会禁用原生 JS 弹窗，导致确认框不出现、点击无反应），
+   改为页面内「再点一次确认删除」的二次点击模式，任何浏览器/环境都可用。 */
+var armedDelBtn = null, armedDelTimer = null, clearAllTimer = null;
+function armDeleteBtn(btn){
+  disarmDeleteBtn();
+  armedDelBtn = btn;
+  btn.classList.add('arming');
+  btn.textContent = '⚠️ 再点一次确认删除';
+  armedDelTimer = setTimeout(disarmDeleteBtn, 3500);
+}
+function disarmDeleteBtn(){
+  if(!armedDelBtn) return;
+  clearTimeout(armedDelTimer);
+  armedDelBtn.classList.remove('arming');
+  armedDelBtn.textContent = '删除';
+  armedDelBtn = null;
+}
+function deleteRecord(id){
+  state.readings = state.readings.filter(function(r){ return r.id!==id; });
+  if(editingNoteId === id) editingNoteId = null;
+  if(editingQuestionId === id) editingQuestionId = null;
+  if(state.autoSavedId === id) state.autoSavedId = null;
+  persistReadings(); updateRecBadge(); renderRecords();
+  toast('已删除一条记录');
+}
+
+/* ---------- 复制为 AI 辅助解牌文本（自然语言格式） ---------- */
+function friendlyPos(p){
+  if(p.indexOf('A · ') === 0) return '选项A的' + p.slice(4);
+  if(p.indexOf('B · ') === 0) return '选项B的' + p.slice(4);
+  if(p.indexOf('C · ') === 0) return '选项C的' + p.slice(4);
+  if(p.indexOf('我以为 · ') === 0) return '我以为（第' + p.slice(6) + '张）';
+  if(p.indexOf('实际上 · ') === 0) return '实际上（第' + p.slice(6) + '张）';
+  return p;
+}
+function buildPrompt(data){
+  var L = [];
+  L.push('请结合一下问题帮助我解牌。你是资深韦特塔罗占卜师，请用专业又易懂的方式解读下面的占卜信息。');
+  L.push('');
+  L.push('占卜时间：' + data.time);
+  L.push('牌阵：' + data.spreadName + '（共 ' + data.cards.length + ' 张）');
+  L.push('我的问题：' + (data.question || '（未记录问题）'));
+  if(data.optA && data.optB){
+    L.push('我正在做选择：');
+    L.push('选项A：' + data.optA);
+    L.push('选项B：' + data.optB);
+    if(data.optC) L.push('选项C：' + data.optC);
+  }
+  L.push('');
+  L.push('抽到的牌面：');
+  data.cards.forEach(function(c, i){
+    var o = c.orientation === 'down' ? '逆位' : '正位';
+    L.push('第' + (i+1) + '张（' + friendlyPos(c.position) + '）：' + c.name + '（' + o + '），牌意提示：' + (c.orientation === 'down' ? c.reversed : c.upright));
+  });
+  if(data.note){
+    L.push('');
+    L.push('我的笔记：' + data.note);
+  }
+  L.push('');
+  L.push('请解读每张牌的含义、牌面的联系和整体指引，并给出三条具体可行的建议，谢谢。');
+  return L.join('\n');
+}
+function recordToText(r){
+  return buildPrompt({
+    time: fmtDate(r.ts),
+    question: r.question,
+    spreadName: r.spreadName,
+    optA: r.optA, optB: r.optB, optC: r.optC,
+    cards: r.cards,
+    note: r.note
+  });
+}
+function drawToPrompt(){
+  var spread = spreadById(state.spreadId);
+  return buildPrompt({
+    time: fmtDate(Date.now()),
+    question: $id('question').value.trim(),
+    spreadName: spread.name,
+    optA: (state.optA||'').trim(),
+    optB: (state.optB||'').trim(),
+    optC: (state.optC||'').trim(),
+    cards: state.draw.map(function(d){
+      return { position: d.pos.label, name: d.card.name, orientation: d.orientation, upright: d.card.upright, reversed: d.card.reversed };
+    }),
+    note: $id('note').value.trim()
+  });
+}
+function copyRecord(id){
+  var r = null;
+  for(var i=0;i<state.readings.length;i++){ if(state.readings[i].id === id){ r = state.readings[i]; break; } }
+  if(!r){ toast('记录不存在'); return; }
+  copyText(recordToText(r));
+}
+/* 复制：优先 Clipboard API → 隐藏 textarea+execCommand（iOS WKWebView 兼容）→ 弹窗手动复制 */
+function showDsPopup(){
+  var m = $id('ds-modal');
+  if(m) m.classList.add('show');
+}
+function hideDsPopup(){
+  var m = $id('ds-modal');
+  if(m) m.classList.remove('show');
+}
+function copyText(text){
+  var ok = function(){ toast('已复制到剪贴板'); showDsPopup(); };
+  var fallback = function(){
+    try{
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.setAttribute('readonly', 'readonly');
+      ta.style.position = 'fixed'; ta.style.left = '-9999px'; ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus(); ta.select();
+      try{ ta.setSelectionRange(0, text.length); }catch(e){}
+      var suc = document.execCommand('copy');
+      document.body.removeChild(ta);
+      if(suc){ ok(); return; }
+      throw new Error('execCommand copy failed');
+    }catch(e){
+      showCopyModal(text);
+    }
+  };
+  try{
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(ok).catch(fallback);
+      return;
+    }
+  }catch(e){}
+  fallback();
+}
+function showCopyModal(text){
+  var body = $id('modal-body');
+  body.innerHTML = '<div class="modal-info" style="width:100%">'+
+    '<div class="m-name" style="font-size:16px">复制此内容</div>'+
+    '<div class="m-sec" style="margin:4px 0 8px;font-size:12px;color:var(--ink4)">自动复制失败时，请长按下方文字手动复制</div>'+
+    '<textarea id="copy-fallback" style="min-height:220px;font-size:12.5px">'+escapeHtml(text)+'</textarea>'+
+  '</div>';
+  $id('modal').classList.add('show');
+  var ta = $id('copy-fallback');
+  if(ta){ try{ ta.focus(); ta.select(); }catch(e){} }
+}
+
+function exportJSON(){
+  if(state.readings.length===0){ toast('暂无记录可导出'); return; }
+  download('塔罗占卜记录_'+fmtDate(Date.now()).replace(/[: ]/g,'-')+'.json',
+    JSON.stringify(state.readings, null, 2), 'application/json');
+}
+function exportText(){
+  if(state.readings.length===0){ toast('暂无记录可导出'); return; }
+  var lines = ['无妄塔罗 · 占卜记录', '导出时间：'+fmtDate(Date.now()), '共 '+state.readings.length+' 条', '='.repeat(46)];
+  state.readings.forEach(function(r, i){
+    lines.push(''); lines.push('【'+(i+1)+'】 '+fmtDate(r.ts));
+    lines.push('问题：'+(r.question||'（未记录问题）'));
+    lines.push('牌阵：'+r.spreadName);
+    if(r.optA) lines.push('选项A：'+r.optA); if(r.optB) lines.push('选项B：'+r.optB); if(r.optC) lines.push('选项C：'+r.optC);
+    r.cards.forEach(function(c){
+      lines.push('· '+c.position+'：'+c.name+'（'+(c.orientation==='down'?'逆位':'正位')+'）— '+(c.orientation==='down'?c.reversed:c.upright));
+    });
+    if(r.note) lines.push('解读：'+r.note);
+  });
+  download('塔罗占卜记录_'+fmtDate(Date.now()).replace(/[: ]/g,'-')+'.txt', lines.join('\n'), 'text/plain');
+}
+function importJSONFile(file){
+  if(!file) return;
+  var reader = new FileReader();
+  reader.onload = function(){ importJSONData(reader.result); };
+  reader.readAsText(file);
+}
+function importJSONData(text){
+  try{
+    var data = JSON.parse(text);
+    if(!Array.isArray(data)) throw new Error('文件内容不是记录数组');
+    var ids = {};
+    state.readings.forEach(function(r){ if(r && r.id) ids[r.id] = true; });
+    var added = 0;
+    data.forEach(function(r){
+      if(r && r.id && !ids[r.id]){ ids[r.id] = true; state.readings.push(r); added++; }
+    });
+    state.readings.sort(function(a,b){ return (b.ts||0) - (a.ts||0); });
+    persistReadings(); updateRecBadge(); renderRecords();
+    toast(added ? '导入成功：新增 '+added+' 条记录' : '没有新增记录（可能已全部存在）');
+    if(state.tab !== 'records') toggleTab('records');
+  }catch(e){ toast('导入失败：'+e.message); }
+}
+function download(name, content, mime){
+  try{
+    var blob = new Blob([content], {type: mime+';charset=utf-8'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 800);
+  }catch(e){ toast('导出失败：'+e.message); }
+}
+
+/* =========================================================
+   牌库
+   ========================================================= */
+function renderLibrary(){
+  var kw = state.libSearch.trim().toLowerCase();
+  var filter = state.libFilter;
+  var list = DECK.filter(function(c){
+    if(filter==='major' && c.arcana!=='大阿卡纳') return false;
+    if(filter!=='all' && filter!=='major' && c.key!==filter) return false;
+    if(kw){
+      var hay = (c.name+' '+c.en+' '+c.upright+' '+c.reversed+' '+c.numLabel).toLowerCase();
+      if(hay.indexOf(kw)===-1) return false;
+    }
+    return true;
+  });
+  $id('lib-grid').innerHTML = list.length ? list.map(function(c){
+    return '<div class="lib-card" data-card-id="'+c.idx+'">'+
+      '<img src="'+IMGS[c.img]+'" alt="'+c.name+'" loading="lazy" style="aspect-ratio:'+dimsOf(c.img)+'">'+
+      '<div class="lib-name">'+c.name+'</div>'+
+      '<div class="lib-sub">'+c.arcana+(c.suit?(' · '+c.suit+' '+c.element):'')+' · № '+numTagLabel(c)+'</div>'+
+    '</div>';
+  }).join('') : '<div class="empty"><span class="e-ico">🃏</span>没有匹配的牌</div>';
+}
+
+/* =========================================================
+   弹窗（查看单张牌意）
+   ========================================================= */
+function openModal(ci, orientation){
+  var c = DECK[ci];
+  if(!c) return;
+  if(!IMGS[c.img]){ toast('缺少牌图：'+c.name); return; }
+  var revHtml = (orientation ? '<div class="m-sec"><div class="m-sec-title '+(orientation==='down'?'down':'up')+'">'+
+    (orientation==='down'?'🔻 逆位':'🔼 正位')+'</div><p>'+escapeHtml(orientation==='down'?c.reversed:c.upright)+'</p></div>'
+    : '<div class="m-sec"><div class="m-sec-title up">🔼 正位</div><p>'+escapeHtml(c.upright)+'</p></div>'+
+      '<div class="m-sec"><div class="m-sec-title down">🔻 逆位</div><p>'+escapeHtml(c.reversed)+'</p></div>');
+  var imgCls = orientation === 'down' ? ' class="rev"' : '';
+  $id('modal-body').innerHTML =
+    '<div class="modal-img"><img src="'+IMGS[c.img]+'" alt="'+c.name+'"'+imgCls+' style="aspect-ratio:'+dimsOf(c.img)+'"></div>'+
+    '<div class="modal-info"><div class="m-name">'+c.name+'</div><div class="m-en">'+c.en+'</div>'+
+    '<span class="m-num">№ '+numTagLabel(c)+' · '+c.arcana+(c.suit?(' · '+c.suit+'（'+c.element+'）'):'')+'</span>'+
+    revHtml+'</div>';
+  $id('modal').classList.add('show');
+}
+
+/* =========================================================
+   事件绑定
+   ========================================================= */
+document.addEventListener('click', function(ev){
+  var t = ev.target;
+
+  // 点击删除按钮以外任何位置时，取消待确认的删除状态
+  if(armedDelBtn && !(armedDelBtn.contains && armedDelBtn.contains(t))) disarmDeleteBtn();
+
+  // 标签页
+  var tabBtn = t.closest ? t.closest('.tab') : null;
+  if(tabBtn){ toggleTab(tabBtn.dataset.tab); return; }
+
+  // 牌阵选择
+  var sb = t.closest ? t.closest('.spread-button') : null;
+  if(sb){
+    state.spreadId = sb.dataset.id;
+    updateChoiceOpts();
+    renderSpreads();
+    if(state.draw.length){ clearDraw(); toast('已更换牌阵，请重新抽牌'); }
+    updateMethodHint();
+    return;
+  }
+
+  // 抽取方式（仅处理带 data-method 的按钮；逆位开关是独立 label，不参与）
+  var mb = t.closest ? t.closest('.method') : null;
+  if(mb && mb.dataset.method){
+    if(mb.dataset.method === 'pick' && state.method !== 'pick'){
+      // 进入选牌模式时牌堆重新洗一遍
+      newDeck(); state.picked = [];
+    }
+    state.method = mb.dataset.method;
+    document.querySelectorAll('.method').forEach(function(b){
+      b.classList.toggle('active', b.dataset.method===state.method);
+    });
+    updateMethodHint();
+    return;
+  }
+
+  // 随机抽牌
+  if(t.closest && t.closest('#draw-btn')){
+    var spread = spreadById(state.spreadId);
+    if(state.method==='random'){ doRandomDraw(); toast('已抽 '+spread.count+' 张牌，点击牌面翻开'); }
+    else { $id('deck-area').scrollIntoView({behavior:'smooth', block:'start'}); }
+    return;
+  }
+
+  // 重新洗牌
+  if(t.closest && t.closest('#reshuffle')){
+    newDeck(); state.picked = [];
+    renderDeck(); toast('已重新洗牌');
+    return;
+  }
+  // 清空已选
+  if(t.closest && t.closest('#clear-pick')){
+    state.picked = []; renderDeck(); return;
+  }
+  // 确认出牌
+  if(t.closest && t.closest('#confirm-pick')){
+    doPickDraw(); toast('出牌完成，点击牌面翻开查看');
+    return;
+  }
+  // 手机端悬浮确认按钮
+  if(t.closest && t.closest('#confirm-fab')){
+    doPickDraw(); toast('出牌完成，点击牌面翻开查看');
+    return;
+  }
+
+  // 牌堆选牌
+  var dc = t.closest ? t.closest('.deck-card') : null;
+  if(dc && !dc.classList.contains('used')){
+    var ci = parseInt(dc.dataset.ci, 10);
+    var idx = state.picked.indexOf(ci);
+    if(idx >= 0){
+      state.picked.splice(idx, 1);
+    } else {
+      if(state.picked.length >= expectCount()){
+        toast('已选满 '+expectCount()+' 张，先点一张已选的数字牌取消，再选其他牌'); return;
+      }
+      state.picked.push(ci);
+    }
+    renderDeck();
+    return;
+  }
+
+  // 翻开/合上（只切换被点击的那张，不重渲染牌阵区）
+  var cb = t.closest ? t.closest('.cardbox') : null;
+  if(cb){
+    var d = state.draw.find(function(x){ return x.card.idx === parseInt(cb.dataset.card,10); });
+    if(d){
+      d.flipped = !d.flipped;
+      setCardFlippedUI(cb, d.flipped);
+      updateFlipAllLabel();
+    }
+    return;
+  }
+
+  // 查看牌意（点击牌面下方名称 / 弹窗由 openModal 触发）
+  var ct = t.closest ? t.closest('.card-title') : null;
+  if(ct){
+    var d2 = state.draw.find(function(x){ return x.card.idx === parseInt(ct.parentElement.querySelector('.cardbox').dataset.card,10); });
+    if(d2) openModal(d2.card.idx, d2.orientation);
+    return;
+  }
+
+  // 全部翻开 / 清空
+  if(t.closest && t.closest('#flip-all')){
+    var any = state.draw.some(function(d){ return !d.flipped; });
+    state.draw.forEach(function(d){ d.flipped = any; });
+    // DOM 局部同步：按 data-card 对应更新每张牌
+    var map = {};
+    state.draw.forEach(function(d){ map[d.card.idx] = d.flipped; });
+    var boxes = $id('cards').querySelectorAll('.cardbox');
+    for(var bi = 0; bi < boxes.length; bi++){
+      var di = parseInt(boxes[bi].dataset.card, 10);
+      if(di in map) setCardFlippedUI(boxes[bi], map[di]);
+    }
+    updateFlipAllLabel();
+    return;
+  }
+  if(t.closest && t.closest('#clear-draw')){
+    clearDraw(); scrollToTop(); toast('已清空，可重新抽牌'); return;
+  }
+  // 回到顶部悬浮按钮（页面中途快速回顶）
+  if(t.closest && t.closest('#back-top')){
+    if(state.tab !== 'draw') toggleTab('draw');
+    scrollToTop();
+    return;
+  }
+  if(t.closest && t.closest('#save-btn')){ saveCurrent(); return; }
+  if(t.closest && t.closest('#new-question')){ resetToNewQuestion(); return; }
+
+  // DeepSeek 复制后弹窗
+  if(t.closest && t.closest('#ds-close')){ hideDsPopup(); return; }
+  if(t.closest && t.closest('#ds-later')){ hideDsPopup(); return; }
+  if(t.closest && t.closest('#ds-go')){
+    hideDsPopup();
+    try{ window.open('https://chat.deepseek.com', '_blank'); }catch(e){}
+    return;
+  }
+
+  // 复制本次占卜结果给其他 AI 辅助解牌
+  if(t.closest && t.closest('#copy-draw')){
+    if(state.draw.length === 0){ toast('请先抽牌再复制'); return; }
+    copyText(drawToPrompt());
+    return;
+  }
+
+  // 记录区
+  var ed = t.closest ? t.closest('.entry') : null;
+  if(ed){
+    var copyBtn = t.closest ? t.closest('.entry-copy') : null;
+    if(copyBtn){
+      ev.stopPropagation();
+      copyRecord(ed.dataset.id);
+      return;
+    }
+    var noteEdit = t.closest ? t.closest('[data-action="note-edit"]') : null;
+    if(noteEdit){
+      ev.stopPropagation();
+      editingNoteId = ed.dataset.id;
+      renderRecords();
+      var ta = $id('note-edit-input');
+      if(ta){ try{ ta.focus(); }catch(e){} }
+      return;
+    }
+    var noteSave = t.closest ? t.closest('[data-action="note-save"]') : null;
+    if(noteSave){
+      ev.stopPropagation();
+      var ta2 = $id('note-edit-input');
+      if(updateRecordNote(ed.dataset.id, ta2 ? ta2.value.trim() : '')) toast('笔记已更新');
+      editingNoteId = null;
+      renderRecords();
+      return;
+    }
+    var noteCancel = t.closest ? t.closest('[data-action="note-cancel"]') : null;
+    if(noteCancel){
+      ev.stopPropagation();
+      editingNoteId = null;
+      renderRecords();
+      return;
+    }
+    // 修改问题（与笔记编辑同一套交互）
+    var qEdit = t.closest ? t.closest('[data-action="q-edit"]') : null;
+    if(qEdit){
+      ev.stopPropagation();
+      editingQuestionId = ed.dataset.id;
+      renderRecords();
+      var qta = $id('q-edit-input');
+      if(qta){ try{ qta.focus(); }catch(e){} }
+      return;
+    }
+    var qSave = t.closest ? t.closest('[data-action="q-save"]') : null;
+    if(qSave){
+      ev.stopPropagation();
+      var qta2 = $id('q-edit-input');
+      if(updateRecordQuestion(ed.dataset.id, qta2 ? qta2.value.trim() : '')) toast('问题已更新');
+      editingQuestionId = null;
+      renderRecords();
+      return;
+    }
+    var qCancel = t.closest ? t.closest('[data-action="q-cancel"]') : null;
+    if(qCancel){
+      ev.stopPropagation();
+      editingQuestionId = null;
+      renderRecords();
+      return;
+    }
+    // 处于笔记 / 问题编辑态时，点击编辑区域（文本框/按钮等）不应收起条目
+    if(t.closest && (t.closest('.entry-note.editor') || t.closest('.entry-q-block.editor'))){
+      return;
+    }
+    var delBtn = t.closest ? t.closest('.entry-del') : null;
+    if(delBtn){
+      ev.stopPropagation();
+      if(armedDelBtn === delBtn){
+        // 第二次点击：真正删除
+        disarmDeleteBtn();
+        deleteRecord(ed.dataset.id);
+      } else {
+        // 第一次点击：进入待确认状态
+        armDeleteBtn(delBtn);
+        toast('再点一次「删除」确认，3 秒后自动取消');
+      }
+      return;
+    }
+    // 点牌图只看该张牌意（按记录下来的正/逆位），不改变牌的方向
+    var thumb = t.closest ? t.closest('.entry-thumbs img, .entry-card img') : null;
+    if(thumb){
+      var ori = thumb.dataset.orient === 'down' ? 'down' : undefined;
+      openModal(parseInt(thumb.dataset.cardId,10), ori);
+      return;
+    }
+    var body = ed.querySelector('.entry-body');
+    if(body){
+      body.hidden = !body.hidden;
+      if(body.hidden){ delete expandedIds[ed.dataset.id]; }
+      else { expandedIds[ed.dataset.id] = true; }
+    }
+    return;
+  }
+
+  // 导出/导入/清空
+  if(t.closest && t.closest('#export-json')){ exportJSON(); return; }
+  if(t.closest && t.closest('#export-txt')){ exportText(); return; }
+  if(t.closest && t.closest('#import-json')){ $id('import-file').click(); return; }
+  if(t.closest && t.closest('#clear-all')){
+    var ca = $id('clear-all');
+    if(ca.dataset.armed === '1'){
+      delete ca.dataset.armed;
+      clearTimeout(clearAllTimer);
+      ca.textContent = '清空全部';
+      state.readings = []; persistReadings(); updateRecBadge(); renderRecords();
+      toast('已清空全部记录');
+    } else {
+      ca.dataset.armed = '1';
+      ca.textContent = '⚠️ 再点一次确认清空全部';
+      clearTimeout(clearAllTimer);
+      clearAllTimer = setTimeout(function(){
+        delete ca.dataset.armed;
+        ca.textContent = '清空全部';
+      }, 3500);
+    }
+    return;
+  }
+
+  // 牌库
+  var lc = t.closest ? t.closest('.lib-card') : null;
+  if(lc){ openModal(parseInt(lc.dataset.cardId,10)); return; }
+  var chip = t.closest ? t.closest('.chip') : null;
+  if(chip && chip.closest('#view-library')){
+    document.querySelectorAll('#view-library .chip').forEach(function(c){ c.classList.remove('active'); });
+    chip.classList.add('active');
+    state.libFilter = chip.dataset.filter;
+    renderLibrary(); return;
+  }
+});
+
+$id('modal-close').addEventListener('click', function(){ $id('modal').classList.remove('show'); });
+$id('modal').addEventListener('click', function(ev){ if(ev.target === this) this.classList.remove('show'); });
+$id('ds-modal').addEventListener('click', function(ev){ if(ev.target === this) this.classList.remove('show'); });
+$id('question').addEventListener('input', queueSyncFields);
+$id('optA').addEventListener('input', function(){ state.optA = this.value; queueSyncFields(); });
+$id('optB').addEventListener('input', function(){ state.optB = this.value; queueSyncFields(); });
+$id('optC').addEventListener('input', function(){ state.optC = this.value; queueSyncFields(); });
+$id('note').addEventListener('input', queueSyncFields);
+var syncTimer = null;
+function queueSyncFields(){
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(syncAutoRecordFields, 800);
+}
+$id('lib-search').addEventListener('input', function(){ state.libSearch = this.value; renderLibrary(); });
+$id('import-file').addEventListener('change', function(){
+  if(this.files && this.files[0]) importJSONFile(this.files[0]);
+  this.value = '';
+});
+
+function updateMethodHint(){
+  var hint = $id('draw-hint');
+  if(state.method==='random'){
+    $id('deck-area').hidden = true;
+    $id('draw-btn').textContent = '随机抽 ' + expectCount() + ' 张牌';
+    hint.textContent = '点击牌面翻开 / 合上，点牌名查看完整牌意。';
+  } else {
+    // 已出牌时牌堆保持收起（由 setSetupVisible 统一管理），避免出牌后又被放出来
+    if(state.draw.length === 0) $id('deck-area').hidden = false;
+    $id('draw-btn').textContent = '去牌堆选 ' + expectCount() + ' 张牌';
+    hint.textContent = '';
+    if(!deckReady()) newDeck();
+    // renderDeck 内部会同步「已选 N/M」与「还差几张」的提示
+    renderDeck();
+  }
+}
+
+/* ---------- 初始化 ---------- */
+renderSpreads();
+toggleTab('draw');
+updateChoiceOpts();
+updateRecBadge();
+initStorage();
+updateMethodHint();
+renderCards();        // 同步「未出牌时显示布阵控件」的初始可见性
+updateBackTop();      // 同步「回到顶部」按钮的初始显隐（刷新后可能已在页面中部）
+</script>
+</body>
+</html>
