@@ -290,10 +290,12 @@ textarea:focus,input[type=text]:focus{outline:none;border-color:var(--gold-dim)}
 .journal{display:flex;flex-direction:column;margin-top:10px}
 .entry{border-bottom:1px solid var(--line)}
 .entry:last-child{border-bottom:none}
-.entry-head{display:flex;justify-content:space-between;align-items:center;padding:16px 6px;cursor:pointer;gap:12px}
+/* 记录头部：只有文字块，占满整宽，长问题自然折行，永远不会和按钮互相挤压 */
+.entry-head{display:block;padding:16px 6px;cursor:pointer}
 .entry-head:hover{background:rgba(255,255,255,.015)}
-.entry-q{font-size:14.5px;font-weight:600;color:var(--ink);letter-spacing:.02em}
-.entry-meta{font-size:11px;color:var(--ink4);margin-top:3px;letter-spacing:.03em}
+.entry-main{min-width:0}
+.entry-q{font-size:14.5px;font-weight:600;color:var(--ink);letter-spacing:.02em;overflow-wrap:anywhere}
+.entry-meta{font-size:11px;color:var(--ink4);margin-top:3px;letter-spacing:.03em;overflow-wrap:anywhere}
 .entry-del{
   padding:5px 12px;border-radius:8px;border:1px solid transparent;background:none;
   color:var(--ink4);cursor:pointer;font-size:12px;font-family:inherit;transition:all .18s;
@@ -309,7 +311,8 @@ textarea:focus,input[type=text]:focus{outline:none;border-color:var(--gold-dim)}
   white-space:nowrap;flex:none;
 }
 .entry-copy:hover{color:var(--gold);border-color:var(--gold-dim)}
-.entry-actions{display:flex;align-items:center;gap:4px;flex:none;flex-wrap:nowrap}
+/* 复制 / 删除：独占一行、右对齐，桌面上也和问题文字左对齐起于同一网格 */
+.entry-actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;padding:0 6px 8px;flex-wrap:nowrap}
 .entry-body{padding:6px 6px 20px;border-top:1px solid var(--line)}
 .entry-thumbs{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}
 .entry-thumbs img{width:52px;aspect-ratio:250/432;border-radius:6px;border:none;box-shadow:0 4px 10px rgba(0,0,0,.35)}
@@ -443,9 +446,9 @@ textarea:focus,input[type=text]:focus{outline:none;border-color:var(--gold-dim)}
 }
 .back-top:hover{border-color:var(--gold);color:var(--gold2);transform:translateY(-2px)}
 .back-top:active{transform:scale(.94)}
-/* 手机端「确认出牌」是底部居中长条，这里上移让位，避免遮挡 */
+/* 手机端「确认出牌」是底部居中长条，这里上移让位；同时避开记录页右下角的「删除」按钮 */
 @media (max-width:640px){
-  .back-top{right:12px;bottom:88px}
+  .back-top{right:10px;bottom:96px;width:42px;height:42px}
 }
 
 /* 复制后前往 DeepSeek 弹窗 */
@@ -485,11 +488,10 @@ footer{
   .app{padding:20px 18px 26px;border-radius:16px}
   .header{flex-direction:column;align-items:flex-start;gap:10px}
   .tabs{gap:18px}
-  /* 记录头部改为竖排：把「复制 / 删除」按钮挤成竖排文字的问题彻底解决 */
-  .entry-head{flex-direction:column;align-items:stretch;gap:10px}
-  .entry-head>div:first-child{width:100%}
-  .entry-actions{flex-wrap:wrap;gap:8px;justify-content:flex-end}
-  .entry-copy,.entry-del,.entry-q-edit,.entry-note-edit{padding:6px 14px;flex:none;white-space:nowrap}
+  /* 记录条目：文字占满整行；「复制 / 删除」独占一行靠右，行距与文字块保持一致 */
+  .entry-head{padding:14px 6px 4px}
+  .entry-actions{width:auto;padding:0 2px 14px 6px;gap:14px}
+  .entry-copy,.entry-del,.entry-q-edit,.entry-note-edit{flex:none;white-space:nowrap;padding:7px 16px}
   .choice-row{gap:14px}
   .deck-grid{grid-template-columns:repeat(auto-fill,minmax(74px,1fr));gap:8px}
   .modal-img img{width:150px}
@@ -1463,16 +1465,17 @@ function renderRecords(){
     }).join('');
     return '<div class="entry" data-id="'+r.id+'">'+
       '<div class="entry-head">'+
-        '<div><div class="entry-q">'+(r.question? escapeHtml(r.question) : '（未记录问题）')+'</div>'+
+        '<div class="entry-main"><div class="entry-q">'+(r.question? escapeHtml(r.question) : '（未记录问题）')+'</div>'+
         '<div class="entry-meta">'+fmtDate(r.ts)+' · '+escapeHtml(r.spreadName)+
           (r.optA&&r.optB ? ' · A：'+escapeHtml(r.optA)+'｜B：'+escapeHtml(r.optB)+(r.optC?'｜C：'+escapeHtml(r.optC):'') : '')+
         ' · '+r.cards.length+' 张</div></div>'+
-        '<div class="entry-actions">'+
-          '<button class="entry-copy" data-action="copy" title="复制为自然语言文本（问题、时间与牌面含正逆位），粘贴给其他 AI 辅助解牌">复制</button>'+
-          '<button class="entry-del" data-action="del" title="删除">删除</button>'+
-        '</div>'+
       '</div>'+
       '<div class="entry-thumbs">'+thumbs+'</div>'+
+      /* 复制 / 删除独占一行靠右：文字再长也不会把它们挤错位，手机上也不会压到回到顶部按钮 */
+      '<div class="entry-actions">'+
+        '<button class="entry-copy" data-action="copy" title="复制为自然语言文本（问题、时间与牌面含正逆位），粘贴给其他 AI 辅助解牌">复制</button>'+
+        '<button class="entry-del" data-action="del" title="删除">删除</button>'+
+      '</div>'+
       '<div class="entry-body"'+(expandedIds[r.id] ? '' : ' hidden')+'>'+
         '<div class="entry-cards">'+r.cards.map(function(c){
           var oCls = c.orientation==='down' ? ' down' : '';
