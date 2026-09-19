@@ -82,7 +82,10 @@ textarea,input[type=text]{
   width:100%;background:transparent;border:1px solid var(--line2);border-radius:10px;
   color:var(--ink);padding:11px 14px;font-size:14px;font-family:inherit;transition:border-color .2s;
 }
-textarea{min-height:62px;resize:vertical}
+textarea{min-height:62px;resize:vertical;line-height:1.7}
+/* 自增高的输入框：默认一行、随内容变高，禁止手动拖拽 */
+textarea.auto{min-height:0;height:auto;overflow:hidden;resize:none}
+#note.auto,#note-edit-input{min-height:0;overflow:hidden;resize:none;line-height:1.7}
 textarea:focus,input[type=text]:focus{outline:none;border-color:var(--gold-dim)}
 .hint{font-size:12px;color:var(--ink4);margin-top:10px;letter-spacing:.02em}
 .btn{
@@ -106,6 +109,77 @@ textarea:focus,input[type=text]:focus{outline:none;border-color:var(--gold-dim)}
 .btn-danger:hover{background:rgba(224,138,151,.1)}
 .status{font-size:12.5px;color:var(--teal);font-weight:600;margin-left:6px}
 .actions{margin-top:10px}
+
+/* 抽牌后的问题展示：与「记录」里的问题文字同款样式，只读；整块可点，点了就地修改 */
+.question-locked{padding:0;border:0;background:none}
+.question-locked .ql-box{
+  padding:11px 15px;border:1px solid var(--line);border-left:2px solid var(--gold-dim);
+  border-radius:10px;background:var(--panel2);cursor:pointer;transition:border-color .18s,background .18s;
+}
+.question-locked .ql-box:hover{border-color:var(--line2);background:rgba(255,255,255,.05)}
+.question-locked .ql-label{
+  display:block;font-size:10px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:6px;
+}
+.question-locked .ql-add{margin-top:2px;padding:7px 14px}
+.question-locked .ql-add:hover{color:var(--gold);border-color:var(--gold-dim);background:var(--gold-soft)}
+/* 选项区块：与上方留出余量，不再显得拥挤 */
+.question-locked .ql-opts-block{margin-top:10px}
+.question-locked .ql-opts-row{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.question-locked .ql-opts{margin:0}
+.question-locked .ql-box.slim{padding:13px 15px}
+.question-locked .ql-mini{
+  margin-left:10px;padding:2px 12px;border-radius:7px;border:1px solid var(--line2);
+  background:transparent;color:var(--ink4);font-size:11px;font-family:inherit;cursor:pointer;
+  letter-spacing:.05em;transition:all .18s;vertical-align:1px;
+}
+.question-locked .ql-mini:hover{color:var(--gold);border-color:var(--gold-dim)}
+.question-locked .ql-text{
+  font-size:14.5px;font-weight:600;color:var(--ink);letter-spacing:.02em;line-height:1.6;
+  overflow-wrap:anywhere;
+}
+.question-locked .ql-text.empty{color:var(--ink4);font-weight:400}
+.question-locked .ql-opts{
+  margin-top:8px;font-size:12px;color:var(--ink3);letter-spacing:.02em;line-height:1.7;
+  overflow-wrap:anywhere;
+}
+.question-locked .ql-opts b{color:var(--gold);font-weight:700}
+/* 选项行可点：抽牌后仍能重新编辑选项 */
+.ql-opts.clickable{cursor:pointer;border-radius:6px;padding:2px 6px;margin-left:-6px;transition:all .18s}
+.ql-opts.clickable:hover{color:var(--ink2);background:var(--gold-soft)}
+.ql-opts .opt-edit-mini{
+  margin-left:10px;padding:1px 10px;border-radius:7px;border:1px solid var(--line2);
+  background:transparent;color:var(--ink4);font-size:10.5px;font-family:inherit;cursor:pointer;
+  letter-spacing:.05em;transition:all .18s;
+}
+.ql-opts .opt-edit-mini:hover{color:var(--gold);border-color:var(--gold-dim)}
+/* 选项就地编辑表单 */
+.options-edit{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.options-edit .opt-row{display:flex;align-items:center;gap:8px}
+.options-edit .opt-row span{
+  flex:none;width:52px;font-size:10px;font-weight:700;letter-spacing:.14em;
+  color:var(--gold);text-transform:uppercase;
+}
+.options-edit .opt-row input{flex:1;min-width:0}
+/* 记录里的选项行 */
+.entry-q-opts{
+  margin-top:8px;font-size:12px;color:var(--ink3);letter-spacing:.02em;line-height:1.7;
+  overflow-wrap:anywhere;
+}
+.entry-q-opts b{color:var(--gold);font-weight:700}
+.entry-q-opts.clickable{cursor:pointer;transition:color .18s}
+.entry-q-opts.clickable:hover{color:var(--ink2)}
+/* 未填问题时不占一大块：只留一条细细的「+ 写下我的问题」 */
+.question-locked .ql-add{
+  display:block;width:100%;text-align:left;padding:8px 12px;margin:0;
+  border:1px dashed var(--line2);border-radius:10px;background:transparent;
+  color:var(--ink4);font-family:inherit;font-size:12.5px;letter-spacing:.04em;cursor:pointer;
+  transition:all .18s;
+}
+.question-locked .ql-add:hover{color:var(--gold);border-color:var(--gold-dim);background:var(--gold-soft)}
+/* 就地编辑问题的内联表单 */
+.question-locked .ql-edit{display:flex;flex-direction:column;gap:8px}
+.question-locked .ql-edit textarea{min-height:64px}
 
 /* ---------- 牌阵选择 ---------- */
 .spreads{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
@@ -187,8 +261,14 @@ textarea:focus,input[type=text]:focus{outline:none;border-color:var(--gold-dim)}
   font-size:11.5px;font-family:inherit;cursor:pointer;letter-spacing:.08em;transition:color .18s;
 }
 .result-btn:hover{color:var(--gold)}
+/* 换一个问题：金色描边按钮，比纯文字更显眼 */
+.result-btn.gold{
+  padding:4px 14px;border:1px solid var(--gold-dim);border-radius:999px;color:var(--gold);
+  font-weight:600;letter-spacing:.08em;transition:all .18s;
+}
+.result-btn.gold:hover{background:var(--gold-soft);border-color:var(--gold);color:var(--gold2)}
 #view-draw #note{margin-top:22px}
-.cards{display:flex;flex-wrap:wrap;gap:24px;justify-content:center;margin:22px 0 8px}
+.cards{display:flex;flex-wrap:wrap;gap:24px;justify-content:center;margin:26px 0 2px}
 .card-wrap{
   display:flex;flex-direction:column;align-items:center;gap:10px;
   max-width:calc(var(--card-w) + 20px);
@@ -248,7 +328,7 @@ textarea:focus,input[type=text]:focus{outline:none;border-color:var(--gold-dim)}
   width:var(--card-w);text-align:center;
   font-family:var(--serif);font-size:13.5px;font-weight:600;color:var(--ink);
   letter-spacing:.05em;line-height:1.35;
-  min-height:72px;                       /* 预留空间：文字出现不再推挤下方 */
+  min-height:44px;                       /* 预留空间：够放「方向 + 牌意」两行，不空掉一大块 */
   opacity:0;transform:translateY(6px);
   transition:opacity .3s ease,transform .3s ease;
   pointer-events:none;
@@ -281,6 +361,15 @@ textarea:focus,input[type=text]:focus{outline:none;border-color:var(--gold-dim)}
 
 /* ---------- 记录 ---------- */
 .record-tools{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 2px}
+/* 牌意开关所在的一行 */
+.records-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0 0}
+.mean-toggle{font-size:12px;padding:6px 15px}
+.mean-toggle::before{content:'👁 ';margin-right:2px}
+.mean-toggle[aria-pressed="false"]{color:var(--gold);border-color:var(--gold-dim);background:var(--gold-soft)}
+.mean-toggle[aria-pressed="false"]::before{content:'🚫 '}
+/* 隐藏牌意时记录里的牌意文字整体收起。
+   类挂在 <html> 上（脚本在 head 里尽早套用），也兼容挂在 body 上 */
+html.hide-meaning .entry-mean,body.hide-meaning .entry-mean{display:none}
 .store-status{
   font-size:12px;color:var(--ink4);margin-top:12px;padding:9px 14px;border-radius:10px;
   background:var(--panel2);border:1px solid var(--line);letter-spacing:.02em;
@@ -290,10 +379,11 @@ textarea:focus,input[type=text]:focus{outline:none;border-color:var(--gold-dim)}
 .journal{display:flex;flex-direction:column;margin-top:10px}
 .entry{border-bottom:1px solid var(--line)}
 .entry:last-child{border-bottom:none}
-/* 记录头部：只有文字块，占满整宽，长问题自然折行，永远不会和按钮互相挤压 */
-.entry-head{display:block;padding:16px 6px;cursor:pointer}
+/* 记录头部：左边问题/元信息，右边「复制 / 删除」；文字块可收缩，按钮不换行不压缩 */
+.entry-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 6px;cursor:pointer}
 .entry-head:hover{background:rgba(255,255,255,.015)}
-.entry-main{min-width:0}
+/* flex:1 + min-width:0 是关键：否则长问题会把按钮挤出这一行 */
+.entry-main{flex:1 1 auto;min-width:0}
 .entry-q{font-size:14.5px;font-weight:600;color:var(--ink);letter-spacing:.02em;overflow-wrap:anywhere}
 .entry-meta{font-size:11px;color:var(--ink4);margin-top:3px;letter-spacing:.03em;overflow-wrap:anywhere}
 .entry-del{
@@ -311,8 +401,8 @@ textarea:focus,input[type=text]:focus{outline:none;border-color:var(--gold-dim)}
   white-space:nowrap;flex:none;
 }
 .entry-copy:hover{color:var(--gold);border-color:var(--gold-dim)}
-/* 复制 / 删除：独占一行、右对齐，桌面上也和问题文字左对齐起于同一网格 */
-.entry-actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;padding:0 6px 8px;flex-wrap:nowrap}
+/* 复制 / 删除：紧跟在问题右侧，靠右对齐；不换行、不压缩 */
+.entry-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex:none;flex-wrap:nowrap;padding:0}
 .entry-body{padding:6px 6px 20px;border-top:1px solid var(--line)}
 .entry-thumbs{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}
 .entry-thumbs img{width:52px;aspect-ratio:250/432;border-radius:6px;border:none;box-shadow:0 4px 10px rgba(0,0,0,.35)}
@@ -330,24 +420,73 @@ textarea:focus,input[type=text]:focus{outline:none;border-color:var(--gold-dim)}
 .entry-cname .o.down{background:rgba(224,138,151,.13);color:var(--red)}
 .entry-mean{font-size:12px;color:var(--ink3);margin-top:5px;line-height:1.6}
 .entry-note{
-  margin-top:12px;font-size:12.5px;color:var(--ink2);line-height:1.7;
+  margin:12px 6px;font-size:12.5px;color:var(--ink2);line-height:1.7;
   background:none;border:0;border-left:2px solid var(--gold-dim);border-radius:0;padding:4px 14px;
 }
-.entry-note-edit{
+.entry-note.clickable{cursor:pointer;transition:color .18s,border-color .18s}
+.entry-note.clickable:hover{color:var(--ink);border-left-color:var(--gold)}
+.note-label{
+  display:block;font-size:10px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:6px;
+}
+.note-add{margin-top:1px}
+.note-text{overflow-wrap:anywhere;white-space:pre-wrap}
+.note-add{
+  display:inline-block;width:auto;margin:0;padding:4px 12px;border:1px dashed var(--line2);border-radius:8px;
+  background:transparent;color:var(--ink4);font-family:inherit;font-size:12px;letter-spacing:.04em;cursor:pointer;
+  transition:all .18s;
+}
+.note-add:hover{color:var(--gold);border-color:var(--gold-dim);background:var(--gold-soft)}
+.note-edit-mini{
   margin-left:10px;padding:2px 12px;border-radius:7px;border:1px solid var(--line2);
   background:transparent;color:var(--ink4);font-size:11px;font-family:inherit;cursor:pointer;
-  letter-spacing:.05em;transition:all .18s;vertical-align:1px;
+  letter-spacing:.05em;transition:all .18s;
 }
-.entry-note-edit:hover{color:var(--gold);border-color:var(--gold-dim)}
-.entry-note.editor{border-left:none;padding:0}
-.entry-note.editor textarea{min-height:88px}
+.note-edit-mini:hover{color:var(--gold);border-color:var(--gold-dim)}
+/* 编辑态：默认一行，随内容自增高（高度由 JS 设置） */
+.entry-note.editor textarea{min-height:0;height:auto;overflow:hidden;resize:none;line-height:1.7}
 .note-empty{color:var(--ink4);font-size:12px}
 .entry-note-actions{display:flex;gap:8px;margin-top:10px}
 /* 记录内的「问题」编辑区（与笔记编辑同一套按钮样式） */
+/* 第一栏里的「问题」行：文字 + 独立「修改」按钮 */
+.entry-q-row,.entry-opts-row{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+/* 第一栏各行留出上下余量，选项行不再贴着问题行显得拥挤 */
+.entry-q-row{margin:0 0 3px}
+.entry-opts-row{margin:7px 0 1px}
+.entry-q-add,.entry-opt-add{padding:6px 14px}
+.entry-q{font-size:14.5px;font-weight:600;color:var(--ink);letter-spacing:.02em;overflow-wrap:anywhere;min-width:0}
+.entry-q.empty{color:var(--ink4);font-weight:400}
+/* 独立小按钮：任何时候都可见，不再依赖悬停或整块点击 */
+.entry-q-edit{
+  flex:none;padding:1px 10px;border-radius:7px;border:1px solid var(--line2);
+  background:transparent;color:var(--ink4);font-family:inherit;font-size:10.5px;font-weight:400;
+  letter-spacing:.05em;cursor:pointer;transition:all .18s;
+}
+.entry-q-edit:hover{color:var(--gold);border-color:var(--gold-dim)}
+.entry-opts{
+  font-size:12px;color:var(--ink3);letter-spacing:.02em;line-height:1.7;
+  overflow-wrap:anywhere;min-width:0;
+}
+.entry-opts b{color:var(--gold);font-weight:700}
+/* 未填写时的细小入口：不占一行大号文字，视觉上更轻 */
+/* 牌面右下方留白：够放「正位/逆位 · 牌意」两行即可，不再空掉一大块 */
+.entry-q-add,.entry-opt-add{
+  padding:6px 14px;border-radius:8px;border:1px dashed var(--line2);background:transparent;
+  color:var(--ink4);font-family:inherit;font-size:12px;letter-spacing:.04em;cursor:pointer;
+  transition:all .18s;
+}
+.entry-q-add:hover,.entry-opt-add:hover{color:var(--gold);border-color:var(--gold-dim);background:var(--gold-soft)}
+.entry-opts-empty{color:var(--ink4)}
+/* 第一栏里就地编辑问题用的文本框 */
+.q-edit-area{min-height:52px}
+/* 展开区底部：只放「删除」（含二次确认），删除按钮不再出现在第一栏 */
+.entry-foot{display:flex;justify-content:flex-end;padding:2px 6px 0;margin-top:4px}
 .entry-q-block{
   margin-top:12px;font-size:12.5px;color:var(--ink2);line-height:1.7;
   background:none;border:0;border-left:2px solid var(--gold-dim);border-radius:0;padding:4px 14px;
 }
+.entry-q-block.clickable{cursor:pointer;transition:color .18s,border-color .18s}
+.entry-q-block.clickable:hover{color:var(--ink);border-left-color:var(--gold)}
 .entry-q-edit{
   margin-left:10px;padding:2px 12px;border-radius:7px;border:1px solid var(--line2);
   background:transparent;color:var(--ink4);font-size:11px;font-family:inherit;cursor:pointer;
@@ -488,9 +627,10 @@ footer{
   .app{padding:20px 18px 26px;border-radius:16px}
   .header{flex-direction:column;align-items:flex-start;gap:10px}
   .tabs{gap:18px}
-  /* 记录条目：文字占满整行；「复制 / 删除」独占一行靠右，行距与文字块保持一致 */
-  .entry-head{padding:14px 6px 4px}
-  .entry-actions{width:auto;padding:0 2px 14px 6px;gap:14px}
+  /* 记录条目：手机屏幕窄，问题与「复制 / 删除」分两行，按钮右对齐且不竖排断字 */
+  .entry-head{flex-direction:column;align-items:stretch;gap:8px;padding:14px 6px}
+  .entry-main{width:100%}
+  .entry-actions{width:100%;justify-content:flex-end;gap:10px}
   .entry-copy,.entry-del,.entry-q-edit,.entry-note-edit{flex:none;white-space:nowrap;padding:7px 16px}
   .choice-row{gap:14px}
   .deck-grid{grid-template-columns:repeat(auto-fill,minmax(74px,1fr));gap:8px}
@@ -498,6 +638,16 @@ footer{
 }
 
 </style>
+<script>
+/* 尽早套用「隐藏牌意」的偏好，避免页面先闪一下牌意再收起 */
+(function(){
+  try{
+    if(localStorage.getItem('tarot.rws.showMeaning') === '0'){
+      document.documentElement.className += ' hide-meaning';
+    }
+  }catch(e){}
+})();
+</script>
 </head>
 <body>
 <div class="page">
@@ -519,12 +669,15 @@ footer{
 
     <!-- ================= 抽牌占卜 ================= -->
     <section id="view-draw" hidden>
-      <textarea id="question" placeholder="输入你想问的占卜问题，例如：下个月我的工作会有怎样的转机？"></textarea>
+      <!-- 抽牌前：可输入的问题框（提示语只做静心引导，不给示例问题） -->
+      <textarea id="question" placeholder="在心中默念你想问的问题，或在这里写下——专注于它，静一静，再抽牌。" style="margin-top:8px"></textarea>
+      <!-- 抽牌后：同样位置改为只读展示，和记录里的问题样式一致 -->
+      <div class="question-locked" id="question-locked" hidden style="margin-top:8px"></div>
 
       <div id="choice-opts" hidden>
-        <input type="text" id="optA" placeholder="选项 A：（选填）例如「接受新工作」">
-        <input type="text" id="optB" placeholder="选项 B：（选填）例如「留在原公司」" style="margin-top:8px">
-        <input type="text" id="optC" placeholder="选项 C：（选填）例如「先学习半年再决定」" style="margin-top:8px" hidden>
+        <input type="text" id="optA" placeholder="若在做选择，可写下选项 A（选填）">
+        <input type="text" id="optB" placeholder="若在做选择，可写下选项 B（选填）" style="margin-top:8px">
+        <input type="text" id="optC" placeholder="若在做选择，可写下选项 C（选填）" style="margin-top:8px" hidden>
       </div>
 
       <div class="spreads" id="spreads"></div>
@@ -543,7 +696,7 @@ footer{
         </div>
         <div class="deck-context" id="deck-context"></div>
         <div class="deck-grid" id="deck-grid"></div>
-        <div class="tray" id="tray"><div class="tray-empty">点击上方数字牌进行选牌。</div></div>
+        <div class="tray" id="tray"><div class="tray-empty">凭直觉点选上方的数字牌，不看牌面，选好后再出牌。</div></div>
       </div>
 
       <div class="draw-row">
@@ -554,22 +707,17 @@ footer{
         <span class="result-title" id="spread-title"></span>
         <span class="result-actions">
           <button class="result-btn" id="flip-all">全部翻开</button>
-          <button class="result-btn" id="clear-draw">清空</button>
         </span>
       </div>
       <div class="cards" id="cards"></div>
       <div id="post-draw" hidden>
-        <div class="hint" id="draw-hint"></div>
+        <!-- 默认一行，随内容自增高；回车即换行 -->
+        <textarea id="note" class="auto" rows="1" placeholder="写下你的解读或验证，可稍后编辑……"></textarea>
 
-        <textarea id="note" placeholder="写下你的解读或验证，可稍后编辑……"></textarea>
-
-        <div class="actions" style="margin-top:8px">
-          <button class="btn btn-main" id="save-btn">保存</button>
-          <button class="btn btn-save" id="new-question" title="清空当前问题、牌面与笔记，回到顶部开始新占卜">问问其他问题</button>
-          <span class="status" id="status"></span>
-        </div>
-        <div style="margin-top:12px">
-          <button class="btn btn-ghost" id="copy-draw" title="将本次抽牌的问题、时间、牌面与正逆位复制为自然语言文本，粘贴给其他 AI 辅助解牌">复制此次占卜结果到其他AI - 辅助解牌</button>
+        <div class="actions">
+          <!-- 与「随机抽 N 张牌」同一套主按钮样式 -->
+          <button class="btn btn-main" id="clear-draw" title="清空当前问题、牌面与笔记，回到顶部开始新占卜">问问其他问题</button>
+          <button class="btn btn-ghost" id="copy-draw" title="将本次抽牌的问题、时间、牌面与正逆位复制为自然语言文本，粘贴给其他 AI 辅助解牌">复制到其他 AI 解牌</button>
         </div>
       </div>
     </section>
@@ -583,6 +731,11 @@ footer{
         <button class="btn btn-ghost" id="import-json">导入 JSON</button>
         <button class="btn btn-ghost btn-danger" id="clear-all">🗑️ 清空全部</button>
         <input type="file" id="import-file" accept=".json,application/json" style="display:none">
+      </div>
+      <!-- 全库开关：一键开闭所有记录的牌意；同时决定「复制给 AI」是否带上牌意提示 -->
+      <div class="records-bar">
+        <button class="btn btn-ghost mean-toggle" id="mean-global" aria-pressed="true"
+                title="一键隐藏 / 显示所有记录里的牌意；隐藏后复制给 AI 的文本也不含牌意，避免先入为主影响解读">牌意：显示中 · 点此全部隐藏</button>
       </div>
       <div class="store-status" id="store-status"></div>
       <div class="journal" id="journal"></div>
@@ -835,6 +988,15 @@ var SPREADS = [
    状态与存储
    ========================================================= */
 var STORE_KEY = 'tarot.rws.readings.v1';
+var MEAN_KEY = 'tarot.rws.showMeaning';   // 牌意显示开关（全局，记忆上次选择）
+/* 牌意开关：false 时记录里不显示牌意，且复制给 AI 的文本里也不含牌意提示，
+   避免解牌者被简略牌意先入为主。默认显示。 */
+function readShowMeaning(){
+  try{ return localStorage.getItem(MEAN_KEY) !== '0'; }catch(e){ return true; }
+}
+function writeShowMeaning(v){
+  try{ localStorage.setItem(MEAN_KEY, v ? '1' : '0'); }catch(e){}
+}
 var state = {
   tab:'draw',
   spreadId:'past',
@@ -847,7 +1009,8 @@ var state = {
   note:'',
   autoSavedId:null,       // 本次抽牌自动保存的记录 id（重抽/更新时替换，不重复新建）
   readings:[],            // 记录由 initStorage() 在探测可用存储后加载（localStorage 被禁时走 IndexedDB）
-  libFilter:'all', libSearch:''
+  libFilter:'all', libSearch:'',
+  showMeaning: readShowMeaning()   // 记录里 / 复制文本里是否包含牌意
 };
 
 /* ---------- 存储：localStorage 为主 + IndexedDB 镜像 + 内存兜底 ----------
@@ -1073,6 +1236,7 @@ function renderCards(){
   var wrap = $id('cards');
   var hasDraw = state.draw.length > 0;
   setSetupVisible(!hasDraw);
+  updateQuestionArea();      // 抽牌后问题区变为只读展示
   if(!hasDraw){
     wrap.innerHTML = '';
     $id('result-bar').hidden = true;
@@ -1083,8 +1247,7 @@ function renderCards(){
   var spT = spreadById(state.spreadId);
   $id('result-bar').hidden = false;
   $id('spread-title').textContent = spT.name + ' · ' + spT.desc + ' · 抽到 ' + state.draw.length + ' 张';
-  var anyUnflipped = state.draw.some(function(d){ return !d.flipped; });
-  $id('flip-all').textContent = anyUnflipped ? '全部翻开' : '全部合上';
+  updateFlipAllLabel();
 
   var isSingle = spread.id==='single';
   if(spread.id === 'choice' || spread.id === 'choice3'){
@@ -1158,12 +1321,23 @@ function cardWrapHTML(d){
    ========================================================= */
 function expectCount(){ return spreadById(state.spreadId).count; }
 
+/* 清空本次占卜：问题、选项、牌面、已选、笔记一并清掉，重新洗牌并回到顶部。
+   结果区右上角的「问问其他问题」与「清空」是同一个动作，所以只保留这一个入口。 */
 function clearDraw(){
+  var q = $id('question');
+  if(q) q.value = '';
+  ['optA','optB','optC','note'].forEach(function(id){
+    var el = $id(id);
+    if(el) el.value = '';
+  });
+  state.optA = ''; state.optB = ''; state.optC = '';
   state.draw = [];
   state.picked = [];
+  state.autoSavedId = null;
   newDeck();
   renderCards(); renderDeck();
-  $id('status').textContent = '';
+  scrollToTop();
+  toast('已清空，请填写新问题');
 }
 
 function doRandomDraw(){
@@ -1173,7 +1347,6 @@ function doRandomDraw(){
   state.draw = state.deckOrder.slice(0,n).map(function(ci, i){
     return makeDrawItem(ci, i);
   });
-  $id('status').textContent = '';
   renderCards();
   autoSaveDraw();
   scrollToTop();          // 出牌后回到顶部，从问题开始往下看
@@ -1218,9 +1391,27 @@ function setCardFlippedUI(box, flipped){
     t.classList.remove('show');
   }
 }
+
+/* 全部翻开 / 全部合上：只在「还有牌没翻开」时作为快捷动作显示 */
 function updateFlipAllLabel(){
+  var btn = $id('flip-all');
+  if(!btn) return;
   var any = state.draw.some(function(d){ return !d.flipped; });
-  $id('flip-all').textContent = any ? '全部翻开' : '全部合上';
+  btn.textContent = any ? '全部翻开' : '全部合上';
+}
+function flipAllCards(){
+  var btn = $id('flip-all');
+  var any = state.draw.some(function(d){ return !d.flipped; });
+  state.draw.forEach(function(d){ d.flipped = any; });
+  // DOM 局部同步：按 data-card 对应更新每张牌
+  var map = {};
+  state.draw.forEach(function(d){ map[d.card.idx] = d.flipped; });
+  var boxes = $id('cards').querySelectorAll('.cardbox');
+  for(var bi = 0; bi < boxes.length; bi++){
+    var di = parseInt(boxes[bi].dataset.card, 10);
+    if(di in map) setCardFlippedUI(boxes[bi], map[di]);
+  }
+  if(btn) updateFlipAllLabel();
 }
 
 /* =========================================================
@@ -1262,18 +1453,18 @@ function renderDeck(){
   if(ctx){
     if(state.picked.length === 0){
       ctx.className = 'deck-context';
-      ctx.innerHTML = '👆 请从上方牌堆中点选 <b>' + n + ' 张</b>牌，已选 ' + n + ' 张后才能确认出牌。';
+      ctx.innerHTML = '先静一静，然后凭直觉从上方 <b>78 张</b>牌背中点选 <b>' + n + ' 张</b>。';
     } else if(left > 0){
       var sp = spreadById(state.spreadId);
       var nextPos = sp.positions[state.picked.length];
       ctx.className = 'deck-context';
-      ctx.innerHTML = '还差 <b>' + left + '</b> 张（已选 ' + state.picked.length + '/' + n + '）。' +
-        (nextPos ? '下一张为「<b>' + escapeHtml(nextPos.label) + '</b>」' +
+      ctx.innerHTML = '已选 <b>' + state.picked.length + '/' + n + '</b>，还差 <b>' + left + '</b> 张。' +
+        (nextPos ? '这一张对应「<b>' + escapeHtml(nextPos.label) + '</b>」' +
           (nextPos.sub ? '（' + escapeHtml(nextPos.sub) + '）' : '') + '。' : '') +
-        '点已选的数字牌可取消重选，选满后点「确认出牌」。';
+        '继续凭直觉选即可，点已选的数字可取消。';
     } else {
       ctx.className = 'deck-context done';
-      ctx.innerHTML = '✅ 已选满 ' + n + ' 张，可以确认出牌了。点「确认出牌」，出牌后再点击牌面逐张翻开。';
+      ctx.innerHTML = '✅ 已选满 <b>' + n + '</b> 张。静心确认后，点「确认出牌」。';
     }
   }
   var confirmBtn = $id('confirm-pick');
@@ -1358,23 +1549,200 @@ function autoSaveDraw(){
   }
   persistReadings();
   updateRecBadge();
-  $id('status').textContent = '✓ 已自动保存' + (replaced ? ' · 同问题重抽已更新' : '') + ' · 补充笔记会自动同步';
   toast(replaced ? '已自动保存（更新本次记录）' : '已自动保存到占卜记录');
   if(state.tab === 'records') renderRecords();
 }
-/* 笔记/问题编辑后，自动同步到当前抽牌的记录 */
-function syncAutoRecordFields(){
+/* 抽牌后：问题区显示为卡片（可点击就地修改）；未填问题只留一条细提示。
+   与「记录」里的问题同款样式，抽牌后仍可改，改动会同步进记录 */
+function updateQuestionArea(){
+  var ta = $id('question');
+  var locked = $id('question-locked');
+  if(!ta || !locked) return;
+  var editing = state.draw.length === 0;
+  var opts = $id('choice-opts');
+  if(opts && !editing) opts.hidden = true;   // 抽牌后选项输入框收起，内容并入展示
+
+  if(editing){
+    ta.hidden = false;
+    locked.hidden = true;
+    locked.innerHTML = '';
+    return;
+  }
+
+  ta.hidden = true;
+  var q = (ta.value || '').trim();
+  var label = '<span class="ql-label">我的问题</span>';
+  var optsHtml = '';
+  if(spreadNeedsOpts()){
+    // 严格按牌阵取值：二选一只看 A/B，三选一才看 A/B/C
+    var keys = (state.spreadId === 'choice3') ? ['a','b','c'] : ['a','b'];
+    var names = { a:'选项 A', b:'选项 B', c:'选项 C' };
+    var vals = { a:state.optA, b:state.optB, c:state.optC };
+    var filled = keys.filter(function(k){ return (vals[k] || '').trim(); });
+    // 无论有没有填，都保留「修改选项」入口：抽牌后随时能改
+    optsHtml = '<div class="ql-opts-row">' +
+      (filled.length
+        ? '<span class="ql-opts">' + filled.map(function(k){
+            return '<b>' + names[k] + '：</b>' + escapeHtml((vals[k] || '').trim());
+          }).join('　｜　') + '</span>' +
+          '<button type="button" class="ql-mini" id="ql-opt-edit">修改选项</button>'
+        : '<button type="button" class="ql-add" id="ql-opt-edit">＋ 填写选项</button>') +
+      '</div>';
+  }
+
+  // 问题与选项任一为空时都退化成细小入口，规则与「记录」里保持一致
+  var html = label;
+  if(q){
+    html += '<div class="ql-text">' + escapeHtml(q) +
+      '<button type="button" class="ql-mini" id="ql-edit-btn">修改</button></div>';
+  } else {
+    html += '<button type="button" class="ql-add" id="ql-add-btn">＋ 写下我的问题</button>';
+  }
+  if(optsHtml) html += '<div class="ql-opts-block">' + optsHtml + '</div>';
+  locked.innerHTML = '<div class="ql-box' + (q ? '' : ' slim') + '">' + html + '</div>';
+  var editBtn = $id('ql-edit-btn');
+  if(editBtn) editBtn.addEventListener('click', function(ev){ ev.stopPropagation(); editQuestionInline(); });
+  var addBtn = $id('ql-add-btn');
+  if(addBtn) addBtn.addEventListener('click', function(ev){ ev.stopPropagation(); editQuestionInline(); });
+  var optBtn = $id('ql-opt-edit');
+  if(optBtn) optBtn.addEventListener('click', function(ev){ ev.stopPropagation(); editOptionsInline(); });
+  locked.hidden = false;
+}
+/* 选项就地编辑：抽牌后（以及记录里）都能重新填写选项 A/B/C */
+function optionKeys(){
+  return (state.spreadId === 'choice3') ? ['a','b','c'] : ['a','b'];
+}
+function editOptionsInline(onSave){
+  var locked = $id('question-locked');
+  if(!locked) return;
+  var keys = optionKeys();
+  var labels = { a:'选项 A', b:'选项 B', c:'选项 C' };
+  var vals = { a:state.optA, b:state.optB, c:state.optC };
+  locked.hidden = false;
+  locked.innerHTML = '<span class="ql-label">我的选项</span>' +
+    '<div class="options-edit">' +
+      keys.map(function(k){
+        return '<div class="opt-row"><span>' + labels[k] + '</span>' +
+          '<input type="text" id="opt-edit-' + k + '" placeholder="' + labels[k] + '（选填）" value="' +
+          escapeHtml(vals[k] || '') + '"></div>';
+      }).join('') +
+      '<div class="entry-note-actions">' +
+        '<button type="button" class="btn-edit-mini primary" id="opt-save">保存</button>' +
+        '<button type="button" class="btn-edit-mini" id="opt-cancel">取消</button>' +
+      '</div>' +
+    '</div>';
+  var first = $id('opt-edit-' + keys[0]);
+  if(first){ try{ first.focus(); }catch(e){} }
+  var read = function(){
+    var out = { a:'', b:'', c:'' };
+    keys.forEach(function(k){
+      var el = $id('opt-edit-' + k);
+      out[k] = el ? String(el.value || '').trim() : '';
+    });
+    return out;
+  };
+  var save = $id('opt-save');
+  if(save) save.addEventListener('click', function(ev){
+    ev.stopPropagation();
+    if(onSave) onSave(read()); else saveOptionsInline(read());
+  });
+  var cancel = $id('opt-cancel');
+  if(cancel) cancel.addEventListener('click', function(ev){
+    ev.stopPropagation();
+    if(onSave) onSave(null); else updateQuestionArea();
+  });
+  keys.forEach(function(k){
+    var el = $id('opt-edit-' + k);
+    if(!el || !el.addEventListener) return;
+    el.addEventListener('keydown', function(ev){
+      if(ev.key === 'Escape'){
+        ev.stopPropagation();
+        if(onSave) onSave(null); else updateQuestionArea();
+      } else if(ev.key === 'Enter'){
+        ev.preventDefault(); ev.stopPropagation();
+        if(onSave) onSave(read()); else saveOptionsInline(read());
+      }
+    });
+  });
+}
+/* 保存选项并同步进本次记录 */
+function saveOptionsInline(vals){
+  var next = vals || { a:'', b:'', c:'' };
+  state.optA = next.a || ''; state.optB = next.b || ''; state.optC = next.c || '';
+  ['A','B','C'].forEach(function(K){
+    var el = $id('opt' + K);
+    if(el) el.value = state['opt' + K] || '';
+  });
+  updateQuestionArea();
+  syncQuestionToRecord();
+  toast('选项已更新');
+}
+
+/* 就地修改问题：抽牌后也能改，改完同步进本次记录 */
+function editQuestionInline(){  var locked = $id('question-locked');
+  var ta = $id('question');
+  if(!locked || !ta) return;
+  locked.hidden = false;
+  ta.hidden = true;
+  var q = ta.value || '';
+  locked.innerHTML = '<div class="ql-edit">' +
+    '<span class="ql-label">我的问题</span>' +
+    '<textarea id="ql-input" placeholder="在心中默念你想问的问题，或在这里写下……"></textarea>' +
+    '<div class="entry-note-actions">' +
+      '<button type="button" class="btn-edit-mini primary" id="ql-save">保存</button>' +
+      '<button type="button" class="btn-edit-mini" id="ql-cancel">取消</button>' +
+    '</div></div>';
+  var input = $id('ql-input');
+  if(!input) return;
+  input.value = q;
+  try{ input.focus(); }catch(e){}
+  var save = $id('ql-save');
+  if(save) save.addEventListener('click', function(ev){
+    ev.stopPropagation();
+    saveQuestionInline($id('ql-input') ? $id('ql-input').value : q);
+  });
+  var cancel = $id('ql-cancel');
+  if(cancel) cancel.addEventListener('click', function(ev){
+    ev.stopPropagation();
+    updateQuestionArea();
+  });
+  if(input) input.addEventListener('keydown', function(ev){
+    if(ev.key === 'Escape'){ ev.stopPropagation(); updateQuestionArea(); }
+    else if((ev.ctrlKey || ev.metaKey) && ev.key === 'Enter'){
+      ev.preventDefault(); ev.stopPropagation();
+      saveQuestionInline(this.value);
+    }
+  });
+}
+/* 保存就地修改的问题，并同步到本次记录 */
+function saveQuestionInline(text){
+  var ta = $id('question');
+  if(ta) ta.value = (text == null ? '' : String(text)).trim();
+  updateQuestionArea();
+  syncQuestionToRecord();
+  toast('问题已更新');
+}
+/* 把当前问题与选项写回本次自动保存的记录 */
+function syncQuestionToRecord(){
   if(!state.autoSavedId || state.draw.length === 0) return;
   var rec = findRec(state.autoSavedId);
   if(!rec) return;
-  rec.question = $id('question').value.trim();
-  rec.optA = (state.optA||'').trim();
-  rec.optB = (state.optB||'').trim();
-  rec.optC = (state.optC||'').trim();
-  rec.note = $id('note').value.trim();
+  rec.question = ($id('question') && $id('question').value ? $id('question').value : '').trim();
+  rec.optA = (state.optA || '').trim();
+  rec.optB = (state.optB || '').trim();
+  rec.optC = (state.optC || '').trim();
   persistReadings();
   if(state.tab === 'records') renderRecords();
 }
+/* 记录里的问题也支持点击就地修改 */
+function editRecordQuestion(id){
+  editingQuestionId = id;
+  renderRecords();
+  var ta = $id('q-edit-input');
+  if(ta){ try{ ta.focus(); }catch(e){} }
+}
+/* 说明：抽牌前 question / optA-C 是输入框，抽牌后同一位置改为只读展示，
+   所以不存在「抽牌后再改问题」的问题，记录同步只需处理笔记。 */
 /* 换个问题：一键回到初始状态（清空问题/选项/牌/笔记，重新洗牌并回到顶部） */
 function scrollToTop(){
   try{
@@ -1401,46 +1769,6 @@ function onPageScroll(){
   else { backTopTick = setTimeout(function(){ backTopTick = null; updateBackTop(); }, 120); }
 }
 window.addEventListener('scroll', onPageScroll, {passive: true});
-function resetToNewQuestion(){
-  $id('question').value = '';
-  $id('optA').value = '';
-  $id('optB').value = '';
-  $id('optC').value = '';
-  $id('note').value = '';
-  state.optA = ''; state.optB = ''; state.optC = '';
-  state.draw = [];
-  state.picked = [];
-  state.autoSavedId = null;
-  newDeck();
-  renderCards(); renderDeck();
-  $id('status').textContent = '';
-  scrollToTop();
-  toast('已清空，请填写新问题');
-}
-function saveCurrent(){
-  if(state.draw.length===0){ toast('请先抽牌再保存'); return; }
-  if(state.autoSavedId){
-    var old = findRec(state.autoSavedId);
-    if(old){
-      var idx = state.readings.indexOf(old);
-      state.readings[idx] = buildRecord(old.id);
-      persistReadings();
-      $id('status').textContent = '✓ 已更新记录 ' + fmtDate(Date.now());
-      updateRecBadge();
-      toast('已更新占卜记录');
-      if(state.tab === 'records') renderRecords();
-      return;
-    }
-  }
-  var rec = buildRecord();
-  state.readings.unshift(rec);
-  state.autoSavedId = rec.id;
-  persistReadings();
-  $id('status').textContent = '✓ 已保存 ' + fmtDate(rec.ts);
-  updateRecBadge();
-  toast('已保存到占卜记录');
-  if(state.tab === 'records') renderRecords();
-}
 
 function updateRecBadge(){
   var b = $id('rec-count');
@@ -1452,6 +1780,7 @@ function renderRecords(){
   disarmDeleteBtn();
   if(editingNoteId && !findRec(editingNoteId)) editingNoteId = null;
   if(editingQuestionId && !findRec(editingQuestionId)) editingQuestionId = null;
+  if(editingOptionsId && !findRec(editingOptionsId)) editingOptionsId = null;
   Object.keys(expandedIds).forEach(function(id){ if(!findRec(id)) delete expandedIds[id]; });
   var el = $id('journal');
   if(state.readings.length===0){
@@ -1463,32 +1792,73 @@ function renderRecords(){
       var rev = c.orientation === 'down' ? 'rev' : '';
       return '<img src="'+IMGS[c.img]+'" alt="'+c.name+'" title="'+c.name+'" data-card-id="'+c.cardId+'" data-orient="'+c.orientation+'" style="aspect-ratio:'+dimsOf(c.img)+'" class="'+rev+'">';
     }).join('');
+    // 第一栏（entry-head）：问题（带独立「修改」按钮）+ 选项（带独立「修改选项」按钮）+ 复制
+    var mainHtml;
+    if(editingQuestionId === r.id){
+      mainHtml = '<textarea id="q-edit-input" class="q-edit-area" placeholder="修改这次占卜的问题……">'+escapeHtml(r.question||'')+'</textarea>'+
+        '<div class="entry-note-actions">'+
+          '<button class="btn-edit-mini primary" data-action="q-save">保存问题</button>'+
+          '<button class="btn-edit-mini" data-action="q-cancel">取消</button>'+
+        '</div>';
+    } else if(r.question){
+      // 有填写：文字 + 修改按钮
+      mainHtml = '<div class="entry-q-row">'+
+        '<span class="entry-q">'+escapeHtml(r.question)+'</span>'+
+        '<button type="button" class="entry-q-edit" data-action="q-edit" title="修改这次占卜的问题">修改</button>'+
+      '</div>';
+    } else {
+      // 未填写：不占一行大号文字，只留一个细小按钮
+      mainHtml = '<div class="entry-q-row">'+
+        '<button type="button" class="entry-q-add" data-action="q-edit" title="填写这次占卜的问题">＋ 填写问题</button>'+
+      '</div>';
+    }
+
+    var isChoiceSpread = (r.spread === 'choice' || r.spread === 'choice3');
+    // 严格按牌阵取值：二选一只看 A/B，三选一才看 A/B/C（避免历史数据里残留的 C 被显示出来）
+    var optNames = (r.spread === 'choice3') ? ['A','B','C'] : ['A','B'];
+    var optKeys = isChoiceSpread ? optNames.filter(function(k){ return (r['opt'+k] || '').trim(); }) : [];
+    var optsHtml = '';
+    if(editingOptionsId === r.id){
+      optsHtml = '<div class="options-edit">' +
+        optNames.map(function(k){
+          return '<div class="opt-row"><span>选项 ' + k + '</span>' +
+            '<input type="text" id="ropt-' + k.toLowerCase() + '" placeholder="选项 ' + k + '（选填）" value="' +
+            escapeHtml(r['opt'+k] || '') + '"></div>';
+        }).join('') +
+        '<div class="entry-note-actions">' +
+          '<button class="btn-edit-mini primary" data-action="r-opt-save">保存选项</button>' +
+          '<button class="btn-edit-mini" data-action="r-opt-cancel">取消</button>' +
+        '</div></div>';
+    } else if(isChoiceSpread){
+      // 选项没填时不占位，只留「+ 填写选项」一个细小按钮
+      optsHtml = '<div class="entry-opts-row">'+
+        (optKeys.length
+          ? '<span class="entry-opts">' + optKeys.map(function(k){
+              return '<b>选项 '+k+'：</b>'+escapeHtml(r['opt'+k]);
+            }).join('　｜　') + '</span>'+
+            '<button type="button" class="entry-q-edit" data-action="r-opt-edit" title="修改选项">修改选项</button>'
+          : '<button type="button" class="entry-opt-add" data-action="r-opt-edit" title="填写这次占卜的选项">＋ 填写选项</button>')+
+      '</div>';
+    }
+
     return '<div class="entry" data-id="'+r.id+'">'+
       '<div class="entry-head">'+
-        '<div class="entry-main"><div class="entry-q">'+(r.question? escapeHtml(r.question) : '（未记录问题）')+'</div>'+
-        '<div class="entry-meta">'+fmtDate(r.ts)+' · '+escapeHtml(r.spreadName)+
-          (r.optA&&r.optB ? ' · A：'+escapeHtml(r.optA)+'｜B：'+escapeHtml(r.optB)+(r.optC?'｜C：'+escapeHtml(r.optC):'') : '')+
-        ' · '+r.cards.length+' 张</div></div>'+
+        '<div class="entry-main">'+ mainHtml + optsHtml +
+          '<div class="entry-meta">'+fmtDate(r.ts)+' · '+escapeHtml(r.spreadName)+' · '+r.cards.length+' 张</div>'+
+        '</div>'+
+        /* 复制留在问题这一栏的右侧；删除放在展开区（与二次确认一起，避免误删） */
+        '<div class="entry-actions">'+
+          '<button class="entry-copy" data-action="copy" title="复制为自然语言文本（问题、时间与牌面含正逆位），粘贴给其他 AI 辅助解牌">复制</button>'+
+        '</div>'+
       '</div>'+
       '<div class="entry-thumbs">'+thumbs+'</div>'+
-      /* 复制 / 删除独占一行靠右：文字再长也不会把它们挤错位，手机上也不会压到回到顶部按钮 */
-      '<div class="entry-actions">'+
-        '<button class="entry-copy" data-action="copy" title="复制为自然语言文本（问题、时间与牌面含正逆位），粘贴给其他 AI 辅助解牌">复制</button>'+
-        '<button class="entry-del" data-action="del" title="删除">删除</button>'+
-      '</div>'+
+      /* 笔记同步展示在牌图下方：不用展开就能看到，点一下即可编辑 */
+      buildNoteBlock(r)+
       '<div class="entry-body"'+(expandedIds[r.id] ? '' : ' hidden')+'>'+
-        '<div class="entry-cards">'+r.cards.map(function(c){
-          var oCls = c.orientation==='down' ? ' down' : '';
-          var oText = c.orientation==='down' ? '逆位' : '正位';
-          var mean = c.orientation==='down' ? c.reversed : c.upright;
-          return '<div class="entry-card" data-card-id="'+c.cardId+'">'+
-            '<img src="'+IMGS[c.img]+'" alt="'+c.name+'" class="'+(c.orientation==='down'?'rev':'')+'" data-orient="'+c.orientation+'" style="aspect-ratio:'+dimsOf(c.img)+'">'+
-            '<div><div class="entry-pos">'+escapeHtml(c.position)+'</div>'+
-            '<div class="entry-cname">'+escapeHtml(c.name)+'<span class="o'+oCls+'">'+oText+'</span></div>'+
-            '<div class="entry-mean">'+escapeHtml(mean)+'</div></div></div>';
-        }).join('')+'</div>'+
-        buildQuestionBlock(r)+
-        buildNoteBlock(r)+
+        /* 展开后只有删除：第一次点进入二次确认，再点一次才真正删除 */
+        '<div class="entry-foot">'+
+          '<button class="entry-del" data-action="del" title="删除这条记录（需点两次确认）">删除</button>'+
+        '</div>'+
       '</div>'+
     '</div>';
   }).join('');
@@ -1503,32 +1873,42 @@ function escapeHtml(s){
 /* ---------- 记录笔记 / 问题编辑 ---------- */
 var editingNoteId = null;       // 正在编辑笔记的记录 id
 var editingQuestionId = null;   // 正在编辑问题的记录 id
+var editingOptionsId = null;    // 正在编辑选项的记录 id
 var expandedIds = {};   // 已展开的记录 id（重渲染后保持展开状态）
+/* 记录里的笔记：与「问题」同款展示方式；编辑用可自增高的 textarea（默认一行，写多了自己变高） */
 function buildNoteBlock(r){
   if(editingNoteId === r.id){
     return '<div class="entry-note editor">'+
-      '<textarea id="note-edit-input" placeholder="写下你的解读或验证结果……">'+escapeHtml(r.note||'')+'</textarea>'+
+      '<span class="note-label">我的笔记</span>'+
+      '<textarea id="note-edit-input" rows="1" placeholder="写下你的解读或验证结果……">'+escapeHtml(r.note||'')+'</textarea>'+
       '<div class="entry-note-actions">'+
-        '<button class="btn-edit-mini primary" data-action="note-save">保存笔记</button>'+
+        '<button class="btn-edit-mini primary" data-action="note-save">保存</button>'+
         '<button class="btn-edit-mini" data-action="note-cancel">取消</button>'+
       '</div></div>';
   }
-  return '<div class="entry-note">📝 '+(r.note ? escapeHtml(r.note) : '<span class="note-empty">（还未写笔记）</span>')+
-    '<button class="entry-note-edit" data-action="note-edit">'+(r.note?'编辑':'添加笔记')+'</button></div>';
-}
-/* 记录里的「问题」可随时修改（自动保存/重渲染后保持一致） */
-function buildQuestionBlock(r){
-  if(editingQuestionId === r.id){
-    return '<div class="entry-q-block editor">'+
-      '<textarea id="q-edit-input" placeholder="修改这次占卜的问题……">'+escapeHtml(r.question||'')+'</textarea>'+
-      '<div class="entry-note-actions">'+
-        '<button class="btn-edit-mini primary" data-action="q-save">保存问题</button>'+
-        '<button class="btn-edit-mini" data-action="q-cancel">取消</button>'+
-      '</div></div>';
+  var label = '<span class="note-label">我的笔记</span>';
+  if(!r.note){
+    return '<div class="entry-note">'+ label +
+      '<button type="button" class="note-add" data-action="note-edit">＋ 写笔记</button></div>';
   }
-  return '<div class="entry-q-block">❓ '+(r.question ? escapeHtml(r.question) : '<span class="note-empty">（未记录问题）</span>')+
-    '<button class="entry-q-edit" data-action="q-edit">'+(r.question?'修改问题':'添加问题')+'</button></div>';
+  return '<div class="entry-note clickable" data-action="note-edit" title="点击修改笔记">'+ label +
+    '<div class="note-text">'+escapeHtml(r.note)+
+    '<button type="button" class="note-edit-mini" data-action="note-edit">修改</button></div></div>';
 }
+/* 编辑框随内容自增高：默认一行，换行或字数变多就跟着长 */
+function bindNoteEditor(){
+  var ta = $id('note-edit-input');
+  if(!ta || !ta.addEventListener) return;
+  try{ ta.focus(); }catch(e){}
+  var grow = function(){
+    if(!ta.style) return;
+    ta.style.height = 'auto';
+    ta.style.height = ((ta.scrollHeight || 30) + 2) + 'px';
+  };
+  ta.addEventListener('input', grow);
+  grow();
+}
+/* 记录里的问题与选项现在都渲染在第一栏（entry-head），此处不再需要独立区块 */
 function updateRecordNote(id, note){
   var rec = findRec(id);
   if(!rec) return false;
@@ -1567,9 +1947,33 @@ function deleteRecord(id){
   state.readings = state.readings.filter(function(r){ return r.id!==id; });
   if(editingNoteId === id) editingNoteId = null;
   if(editingQuestionId === id) editingQuestionId = null;
+  if(editingOptionsId === id) editingOptionsId = null;
   if(state.autoSavedId === id) state.autoSavedId = null;
   persistReadings(); updateRecBadge(); renderRecords();
   toast('已删除一条记录');
+}
+
+/* ---------- 牌意开关：记录里一键开闭 + 复制文本是否带牌意 ---------- */
+function setShowMeaning(v, silent){
+  state.showMeaning = !!v;
+  writeShowMeaning(state.showMeaning);
+  var cls = 'hide-meaning';
+  [document.documentElement, document.body].forEach(function(el){
+    if(el && el.classList) el.classList.toggle(cls, !state.showMeaning);
+  });
+  var btn = $id('mean-global');
+  if(btn){
+    btn.setAttribute('aria-pressed', state.showMeaning ? 'true' : 'false');
+    btn.textContent = state.showMeaning ? '牌意：显示中 · 点此全部隐藏' : '牌意：已隐藏 · 点此恢复显示';
+  }
+  if(!silent){
+    toast(state.showMeaning
+      ? '已显示牌意（复制给 AI 时也会带上）'
+      : '已隐藏牌意（复制给 AI 时不再包含牌意）');
+  }
+}
+function toggleShowMeaning(){
+  setShowMeaning(!state.showMeaning);
 }
 
 /* ---------- 复制为 AI 辅助解牌文本（自然语言格式） ---------- */
@@ -1596,9 +2000,17 @@ function buildPrompt(data){
   }
   L.push('');
   L.push('抽到的牌面：');
+  if(data.withMeaning === false){
+    // 不带牌意：只给牌名与正逆位，让解牌者凭牌面自行判断
+    L.push('（下面只给牌名与正逆位，不提供牌意提示——请完全依据牌面本身来解读。）');
+  }
   data.cards.forEach(function(c, i){
     var o = c.orientation === 'down' ? '逆位' : '正位';
-    L.push('第' + (i+1) + '张（' + friendlyPos(c.position) + '）：' + c.name + '（' + o + '），牌意提示：' + (c.orientation === 'down' ? c.reversed : c.upright));
+    var line = '第' + (i+1) + '张（' + friendlyPos(c.position) + '）：' + c.name + '（' + o + '）';
+    if(data.withMeaning !== false){
+      line += '，牌意提示：' + (c.orientation === 'down' ? c.reversed : c.upright);
+    }
+    L.push(line);
   });
   if(data.note){
     L.push('');
@@ -1615,7 +2027,8 @@ function recordToText(r){
     spreadName: r.spreadName,
     optA: r.optA, optB: r.optB, optC: r.optC,
     cards: r.cards,
-    note: r.note
+    note: r.note,
+    withMeaning: state.showMeaning
   });
 }
 function drawToPrompt(){
@@ -1630,7 +2043,8 @@ function drawToPrompt(){
     cards: state.draw.map(function(d){
       return { position: d.pos.label, name: d.card.name, orientation: d.orientation, upright: d.card.upright, reversed: d.card.reversed };
     }),
-    note: $id('note').value.trim()
+    note: $id('note').value.trim(),
+    withMeaning: state.showMeaning
   });
 }
 function copyRecord(id){
@@ -1825,7 +2239,7 @@ document.addEventListener('click', function(ev){
   // 随机抽牌
   if(t.closest && t.closest('#draw-btn')){
     var spread = spreadById(state.spreadId);
-    if(state.method==='random'){ doRandomDraw(); toast('已抽 '+spread.count+' 张牌，点击牌面翻开'); }
+    if(state.method==='random'){ doRandomDraw(); }
     else { $id('deck-area').scrollIntoView({behavior:'smooth', block:'start'}); }
     return;
   }
@@ -1842,12 +2256,12 @@ document.addEventListener('click', function(ev){
   }
   // 确认出牌
   if(t.closest && t.closest('#confirm-pick')){
-    doPickDraw(); toast('出牌完成，点击牌面翻开查看');
+    doPickDraw();
     return;
   }
   // 手机端悬浮确认按钮
   if(t.closest && t.closest('#confirm-fab')){
-    doPickDraw(); toast('出牌完成，点击牌面翻开查看');
+    doPickDraw();
     return;
   }
 
@@ -1888,23 +2302,13 @@ document.addEventListener('click', function(ev){
     return;
   }
 
-  // 全部翻开 / 清空
+  // 全部翻开 / 全部合上
   if(t.closest && t.closest('#flip-all')){
-    var any = state.draw.some(function(d){ return !d.flipped; });
-    state.draw.forEach(function(d){ d.flipped = any; });
-    // DOM 局部同步：按 data-card 对应更新每张牌
-    var map = {};
-    state.draw.forEach(function(d){ map[d.card.idx] = d.flipped; });
-    var boxes = $id('cards').querySelectorAll('.cardbox');
-    for(var bi = 0; bi < boxes.length; bi++){
-      var di = parseInt(boxes[bi].dataset.card, 10);
-      if(di in map) setCardFlippedUI(boxes[bi], map[di]);
-    }
-    updateFlipAllLabel();
-    return;
+    flipAllCards(); return;
   }
+  // 问问其他问题（清空本次占卜）
   if(t.closest && t.closest('#clear-draw')){
-    clearDraw(); scrollToTop(); toast('已清空，可重新抽牌'); return;
+    clearDraw(); return;          // clearDraw 内部已回到顶部并提示
   }
   // 回到顶部悬浮按钮（页面中途快速回顶）
   if(t.closest && t.closest('#back-top')){
@@ -1912,8 +2316,14 @@ document.addEventListener('click', function(ev){
     scrollToTop();
     return;
   }
-  if(t.closest && t.closest('#save-btn')){ saveCurrent(); return; }
-  if(t.closest && t.closest('#new-question')){ resetToNewQuestion(); return; }
+  // 抽牌后的问题区：点「＋ 写下我的问题」或卡片本身都能就地修改
+  // 编辑框内部的保存/取消有各自的监听（会 stopPropagation），这里只处理进入编辑
+  if(t.closest && t.closest('#question-locked')){
+    if(t.closest('.ql-edit') || t.closest('.options-edit')) return;   // 编辑中：不重绘，避免输入丢失
+    if(t.closest('[data-action="opt-edit"]')){ editOptionsInline(); return; }
+    if(t.closest('.ql-add') || t.closest('.ql-box')) editQuestionInline();
+    return;
+  }
 
   // DeepSeek 复制后弹窗
   if(t.closest && t.closest('#ds-close')){ hideDsPopup(); return; }
@@ -1931,6 +2341,11 @@ document.addEventListener('click', function(ev){
     return;
   }
 
+  // 记录区：牌意总开关
+  if(t.closest && t.closest('#mean-global')){
+    toggleShowMeaning(); return;
+  }
+
   // 记录区
   var ed = t.closest ? t.closest('.entry') : null;
   if(ed){
@@ -1945,15 +2360,14 @@ document.addEventListener('click', function(ev){
       ev.stopPropagation();
       editingNoteId = ed.dataset.id;
       renderRecords();
-      var ta = $id('note-edit-input');
-      if(ta){ try{ ta.focus(); }catch(e){} }
+      bindNoteEditor();
       return;
     }
     var noteSave = t.closest ? t.closest('[data-action="note-save"]') : null;
     if(noteSave){
       ev.stopPropagation();
       var ta2 = $id('note-edit-input');
-      if(updateRecordNote(ed.dataset.id, ta2 ? ta2.value.trim() : '')) toast('笔记已更新');
+      if(updateRecordNote(ed.dataset.id, ta2 ? ta2.value : '')) toast('笔记已更新');
       editingNoteId = null;
       renderRecords();
       return;
@@ -1962,6 +2376,39 @@ document.addEventListener('click', function(ev){
     if(noteCancel){
       ev.stopPropagation();
       editingNoteId = null;
+      renderRecords();
+      return;
+    }
+    // 选项就地编辑（记录里）
+    var rOptEdit = t.closest ? t.closest('[data-action="r-opt-edit"]') : null;
+    if(rOptEdit){
+      ev.stopPropagation();
+      editingOptionsId = ed.dataset.id;
+      renderRecords();
+      var fi = $id('ropt-a');
+      if(fi){ try{ fi.focus(); }catch(e){} }
+      return;
+    }
+    var rOptSave = t.closest ? t.closest('[data-action="r-opt-save"]') : null;
+    if(rOptSave){
+      ev.stopPropagation();
+      var rec = findRec(ed.dataset.id);
+      if(rec){
+        ['a','b','c'].forEach(function(k){
+          var el = $id('ropt-' + k);
+          rec['opt' + k.toUpperCase()] = el ? String(el.value || '').trim() : '';
+        });
+        persistReadings();
+        toast('选项已更新');
+      }
+      editingOptionsId = null;
+      renderRecords();
+      return;
+    }
+    var rOptCancel = t.closest ? t.closest('[data-action="r-opt-cancel"]') : null;
+    if(rOptCancel){
+      ev.stopPropagation();
+      editingOptionsId = null;
       renderRecords();
       return;
     }
@@ -1991,8 +2438,8 @@ document.addEventListener('click', function(ev){
       renderRecords();
       return;
     }
-    // 处于笔记 / 问题编辑态时，点击编辑区域（文本框/按钮等）不应收起条目
-    if(t.closest && (t.closest('.entry-note.editor') || t.closest('.entry-q-block.editor'))){
+    // 处于笔记 / 问题 / 选项编辑态时，点击编辑区域不应收起条目
+    if(t.closest && (t.closest('.entry-note.editor') || t.closest('.q-edit-area') || t.closest('.options-edit'))){
       return;
     }
     var delBtn = t.closest ? t.closest('.entry-del') : null;
@@ -2064,16 +2511,27 @@ document.addEventListener('click', function(ev){
 $id('modal-close').addEventListener('click', function(){ $id('modal').classList.remove('show'); });
 $id('modal').addEventListener('click', function(ev){ if(ev.target === this) this.classList.remove('show'); });
 $id('ds-modal').addEventListener('click', function(ev){ if(ev.target === this) this.classList.remove('show'); });
-$id('question').addEventListener('input', queueSyncFields);
-$id('optA').addEventListener('input', function(){ state.optA = this.value; queueSyncFields(); });
-$id('optB').addEventListener('input', function(){ state.optB = this.value; queueSyncFields(); });
-$id('optC').addEventListener('input', function(){ state.optC = this.value; queueSyncFields(); });
-$id('note').addEventListener('input', queueSyncFields);
+$id('question').addEventListener('input', function(){
+  // 问题只在抽牌前可改；此时还没生成记录，无需同步
+});
+$id('optA').addEventListener('input', function(){ state.optA = this.value; });
+$id('optB').addEventListener('input', function(){ state.optB = this.value; });
+$id('optC').addEventListener('input', function(){ state.optC = this.value; });
+// 笔记随时可写，防抖同步到当前记录
 var syncTimer = null;
 function queueSyncFields(){
   clearTimeout(syncTimer);
-  syncTimer = setTimeout(syncAutoRecordFields, 800);
+  syncTimer = setTimeout(syncNoteToRecord, 800);
 }
+function syncNoteToRecord(){
+  if(!state.autoSavedId || state.draw.length === 0) return;
+  var rec = findRec(state.autoSavedId);
+  if(!rec) return;
+  rec.note = $id('note').value.trim();
+  persistReadings();
+  if(state.tab === 'records') renderRecords();
+}
+$id('note').addEventListener('input', queueSyncFields);
 $id('lib-search').addEventListener('input', function(){ state.libSearch = this.value; renderLibrary(); });
 $id('import-file').addEventListener('change', function(){
   if(this.files && this.files[0]) importJSONFile(this.files[0]);
@@ -2081,21 +2539,26 @@ $id('import-file').addEventListener('change', function(){
 });
 
 function updateMethodHint(){
-  var hint = $id('draw-hint');
   if(state.method==='random'){
     $id('deck-area').hidden = true;
     $id('draw-btn').textContent = '随机抽 ' + expectCount() + ' 张牌';
-    hint.textContent = '点击牌面翻开 / 合上，点牌名查看完整牌意。';
   } else {
     // 已出牌时牌堆保持收起（由 setSetupVisible 统一管理），避免出牌后又被放出来
     if(state.draw.length === 0) $id('deck-area').hidden = false;
     $id('draw-btn').textContent = '去牌堆选 ' + expectCount() + ' 张牌';
-    hint.textContent = '';
     if(!deckReady()) newDeck();
     // renderDeck 内部会同步「已选 N/M」与「还差几张」的提示
     renderDeck();
   }
 }
+
+/* 抽牌页的笔记框：默认一行，输入时自动增高（回车换行也一起长高） */
+function autoGrow(el){
+  if(!el || !el.style) return;
+  el.style.height = 'auto';
+  el.style.height = ((el.scrollHeight || 30) + 2) + 'px';
+}
+$id('note').addEventListener('input', function(){ autoGrow(this); });
 
 /* ---------- 初始化 ---------- */
 renderSpreads();
@@ -2106,6 +2569,7 @@ initStorage();
 updateMethodHint();
 renderCards();        // 同步「未出牌时显示布阵控件」的初始可见性
 updateBackTop();      // 同步「回到顶部」按钮的初始显隐（刷新后可能已在页面中部）
+setShowMeaning(state.showMeaning, true);   // 同步牌意开关的按钮文案与页面类
 </script>
 </body>
 </html>
